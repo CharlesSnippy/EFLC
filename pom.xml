@@ -129,7 +129,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0.5</version>
+                <version>3.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -139,6 +139,15 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <!--need to find configs in tests in package web-inf like
+        @ContextConfiguration(locations = {"classpath:/config/application-context.xml"
+        -->
+        <testResources>
+            <testResource>
+                <directory>src/main/webapp/WEB-INF/config</directory>
+            </testResource>
+        </testResources>
 
     </build>
 
