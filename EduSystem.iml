@@ -4,8 +4,8 @@
     <facet type="Spring" name="Spring">
       <configuration>
         <fileset id="fileset" name="MVC application context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/config/security-context.xml</file>
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/config/application-context.xml</file>
+          <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/config/security-config.xml</file>
         </fileset>
         <fileset id="fileset2" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/config/mvc-config.xml</file>
@@ -41,7 +41,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/config" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -67,6 +66,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet.jsp:jsp-api:2.2" level="project" />
     <orderEntry type="library" name="Maven: org.hsqldb:hsqldb:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.1.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:4.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.13" level="project" />

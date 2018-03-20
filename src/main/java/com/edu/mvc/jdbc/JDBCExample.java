@@ -62,7 +62,7 @@ public class JDBCExample {
 
     public List<User> queryAllUsers() {
         System.out.println("JDBCExample: queryAllUsers is called");
-        final String QUERY_SQL = "SELECT * FROM USER ORDER BY IDUSER";
+        final String QUERY_SQL = "SELECT * FROM USERS ORDER BY IDUSER";
         List<User> userList = this.jdbcTemplate.query(QUERY_SQL, new RowMapper<User>() {
             public User mapRow(ResultSet resulSet, int rowNum) throws SQLException {
                 User user = new User();
@@ -79,7 +79,7 @@ public class JDBCExample {
     //JDBC TEMPLATE DELETE EXAMPLE
     public boolean deleteUSER(int iduser) {
         System.out.println("JDBCExample: deleteUSER called");
-        final String DELETE_SQL = "DELETE FROM USER WHERE IDUSER LIKE ?";
+        final String DELETE_SQL = "DELETE FROM USERS WHERE IDUSER LIKE ?";
         int result = jdbcTemplate.update(DELETE_SQL, new Object[]{iduser});
         System.out.println("r" + result);
         if (result > 0) {
@@ -93,7 +93,7 @@ public class JDBCExample {
     //JDBC TEMPLATE UPDATE EXAMPLE
     public boolean updateUserEnable(User u, boolean enable) {
         System.out.println("JDBCExample: updateUserEnable called");
-        final String UPDATE_SQL = "UPDATE USER SET ENABLED = ? WHERE USERNAME = ?";
+        final String UPDATE_SQL = "UPDATE USERS SET ENABLED = ? WHERE USERNAME = ?";
         int result = jdbcTemplate.update(UPDATE_SQL, new Object[]{enable, u.getUsername()});
         if (result > 0) {
             System.out.println("User is updated: " + u.getUsername());

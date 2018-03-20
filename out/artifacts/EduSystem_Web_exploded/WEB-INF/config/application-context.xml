@@ -18,10 +18,10 @@
 
     <!-- XML Bean Definitions -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.hsqldb.driverClass}"/>
-        <property name="url" value="${jdbc.hsqldb.url}"/>
-        <property name="username" value="${jdbc.hsqldb.username}"/>
-        <property name="password" value="${jdbc.hsqldb.password}"/>
+        <property name="driverClassName" value="${jdbc.psql.driverClass}"/>
+        <property name="url" value="${jdbc.psql.url}"/>
+        <property name="username" value="${jdbc.psql.username}"/>
+        <property name="password" value="${jdbc.psql.password}"/>
     </bean>
 
     <!-- initialize Embedded DataSource. Встроенная база данных-->
