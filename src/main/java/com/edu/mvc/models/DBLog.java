@@ -1,4 +1,4 @@
-package com.edu.mvc.bean;
+package com.edu.mvc.models;
 
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;

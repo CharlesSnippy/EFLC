@@ -21,7 +21,7 @@
 
     <!-- context:component-scan This tag will scan @Component, @Repository, @Service, @Controller
          and also resolves @Autowired and @Qualifier -->
-    <context:component-scan base-package="com.edu.mvc" />
+    <context:component-scan base-package="com.edu" />
 
     <!--
         mvc:annotation-driven configures Spring MVC annotations
@@ -34,7 +34,7 @@
     <!-- activate @Transactional JPA annotation -->
     <tx:annotation-driven/>
 
-    <!-- ViewResolver bean config for mapping strings to jsp views -->
+    <!-- ViewResolver models config for mapping strings to jsp views -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <!-- Example: a logical view name of 'showMessage' is mapped to '/WEB-INF/jsp/showMessage.jsp' -->
         <property name="order" value="1" />
@@ -45,17 +45,10 @@
     <mvc:view-controller path="/" view-name="/index"/>
     <mvc:view-controller path="/index.html" view-name="/index"/>
     <mvc:view-controller path="/login.html" view-name="/form/login"/>
-    <mvc:view-controller path="/about.html" view-name="/about/about"/>
-    <mvc:view-controller path="/file.html" view-name="/file/file"/>
-    <mvc:view-controller path="/jdbc.html" view-name="/jdbc/jdbc"/>
-    <mvc:view-controller path="/email.html" view-name="/email/email"/>
-    <mvc:view-controller path="/rest.html" view-name="/rest/rest"/>
-    <mvc:view-controller path="/orm.html" view-name="/orm/orm"/>
-    <mvc:view-controller path="/jstl.html" view-name="/jstl/jstl"/>
-    <mvc:view-controller path="/scope.html" view-name="/scope/scope"/>
-    <mvc:view-controller path="/cookie.html" view-name="/cookie/cookieView"/>
     <mvc:view-controller path="/security.html" view-name="/security/security"/>
     <mvc:view-controller path="/security/admin.html" view-name="/security/admin"/>
+
+    <!--<mvc:view-controller path="/site/" view-name="/site/"/>-->
 
 
     <!-- Static Resources Configuration (get access to static sources such as CSS and JavaScript files) -->
@@ -64,14 +57,5 @@
         <mvc:resources mapping="/resources/**" location="/resources/themeBlue" />
         <mvc:resources mapping="/resources/**" location="/resources/themeGreen" />
      -->
-
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/interceptorCall/*"/>
-            <!--need to use ' /** ' not ' /* ' if you want to intercept all requests.-->
-            <!--<mvc:mapping path="/**"/>-->
-            <bean class="com.edu.mvc.interceptors.SiteInterceptor"/>
-        </mvc:interceptor>
-    </mvc:interceptors>
 
 </beans>

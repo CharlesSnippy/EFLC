@@ -13,7 +13,7 @@
 	   http://www.springframework.org/schema/jdbc
        http://www.springframework.org/schema/jdbc/spring-jdbc.xsd ">
 
-    <!--find property file. See bean id='dataSource' for example ${jdbc.hsqldb.driverClass}-->
+    <!--find property file. See models id='dataSource' for example ${jdbc.hsqldb.driverClass}-->
     <context:property-placeholder location="classpath:util.properties"/>
 
     <!-- XML Bean Definitions -->

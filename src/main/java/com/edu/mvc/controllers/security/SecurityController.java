@@ -1,4 +1,4 @@
-package com.edu.mvc.security;
+package com.edu.mvc.controllers.security;
 
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.security.RolesAllowed;
 
+@Deprecated
 @Controller
 public class SecurityController {
 
