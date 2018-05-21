@@ -1,5 +1,7 @@
 package com.edu.mvc.controllers;
 
+import com.edu.mvc.models.Page;
+import com.edu.repositories.PageRepository;
 import com.edu.repositories.SiteRepository;
 import com.edu.services.parsing.ParsingService;
 import com.edu.services.parsing.ParsingServiceImpl;
@@ -12,13 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Controller
 public class SiteController {
 
     @Autowired
     SiteRepository siteRepository;
 
-    ParsingService parsingService = new ParsingServiceImpl();
+    @Autowired
+    PageRepository pageRepository;
+
+    private ParsingService parsingService = new ParsingServiceImpl();
 
     @RequestMapping(value = "/site/all")
     public ModelAndView siteAll() {
@@ -42,6 +49,11 @@ public class SiteController {
 
     @RequestMapping(value = "/site/delete/{siteId}", method = RequestMethod.GET)
     public ModelAndView siteDelete(@PathVariable("siteId") int siteId) {
+        List<Page> pages = pageRepository.getPagesBySiteId(siteId);
+        for (Page page :
+                pages) {
+            pageRepository.delete(page.getPageId());
+        }
         siteRepository.delete(siteId);
         return new ModelAndView("redirect:/");
     }
@@ -50,6 +62,11 @@ public class SiteController {
     public ModelAndView siteParse(@PathVariable("siteId") int siteId) {
         Site site = siteRepository.getById(siteId);
         parsingService.parseSite(site);
+        for (Page page:
+                site.getPages()) {
+            page.setSiteId(site.getSiteId());
+            pageRepository.create(page);
+        }
         return new ModelAndView("redirect:/");
     }
 

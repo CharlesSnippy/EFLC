@@ -53,7 +53,8 @@ public class PageRepository {
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS);
                 preparedStatement.setInt(1, page.getSiteId());
                 preparedStatement.setString(2, page.getUrl());
-                preparedStatement.setString(3, page.getDocument().toString());
+                String docString = (page.getDocument() == null) ? "" : page.getDocument().toString();
+                preparedStatement.setString(3, docString);
                 return preparedStatement;
             }
         }, keyHolder);

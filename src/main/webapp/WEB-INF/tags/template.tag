@@ -31,6 +31,7 @@
     <link href="${sb_admin}" rel="stylesheet" type="text/css">
 
     <c:url value="/" var="index"/>
+    <c:url value="/compare" var="compare"/>
     <c:url value="/site/create" var="siteCreate"/>
 
 </head>
@@ -45,12 +46,17 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <ul class="navbar-nav navbar-sidenav">
             <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
                 <a class="nav-link" href="${siteCreate}">
                     <span class="nav-link-text">Add site</span>
                 </a>
             </li>
+            <%--<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">--%>
+                <%--<a class="nav-link" href="${compare}">--%>
+                    <%--<span class="nav-link-text">Compare pages</span>--%>
+                <%--</a>--%>
+            <%--</li>--%>
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">

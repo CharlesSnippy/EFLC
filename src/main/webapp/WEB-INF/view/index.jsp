@@ -13,6 +13,8 @@
     <jsp:body>
 
         <c:url value="/site/delete/" var="siteDelete"/>
+        <c:url value="/site/parse/" var="siteParse"/>
+        <c:url value="/compare/" var="comparePages"/>
 
         <style>
             .code-area {
@@ -28,7 +30,7 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">URL</th>
-                        <th scope="col">Page count</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Actions</th>
                     </tr>
                     </thead>
@@ -40,17 +42,20 @@
                                     ${item.siteId}
                             </td>
                             <td>
-                                    <a href="${item.url}">${item.url}</a>
+                                <a href="${item.url}">${item.url}</a>
                             </td>
                             <td>
-                                    ${item.pages.size()}
+                                None
                             </td>
                             <td>
                                 <ul class="nav nav-pills">
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Action</a>
+                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+                                           role="button" aria-haspopup="true" aria-expanded="false">Action</a>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="${siteDelete}${item.siteId}">Parse</a>
+                                            <a class="dropdown-item" href="${comparePages}${item.siteId}">Compare
+                                                pages</a>
+                                            <a class="dropdown-item" href="${siteParse}${item.siteId}">Parse</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="${siteDelete}${item.siteId}">Remove</a>
                                         </div>
