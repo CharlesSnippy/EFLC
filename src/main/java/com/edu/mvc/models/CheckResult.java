@@ -4,18 +4,18 @@ import java.util.List;
 
 public class CheckResult {
 
-    int resultId;
-    Criteria criteria;
-    Page page;
-    String answer;
-    List<String> block;
+    private int resultId;
+    private Criterion criterion;
+    private Page page;
+    private String answer;
+    private List<String> block;
 
     public int getResultId() {
         return resultId;
     }
 
-    public Criteria getCriteria() {
-        return criteria;
+    public Criterion getCriterion() {
+        return criterion;
     }
 
     public Page getPage() {
@@ -36,8 +36,8 @@ public class CheckResult {
         this.resultId = resultId;
     }
 
-    public void setCriteria(Criteria criteria) {
-        this.criteria = criteria;
+    public void setCriterion(Criterion criterion) {
+        this.criterion = criterion;
     }
 
     public void setPage(Page page) {

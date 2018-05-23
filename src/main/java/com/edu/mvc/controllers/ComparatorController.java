@@ -7,7 +7,10 @@ import com.edu.repositories.SiteRepository;
 import com.edu.services.parsing.DiffResult;
 import com.edu.services.parsing.ParsingService;
 import com.edu.services.parsing.ParsingServiceImpl;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,12 +43,33 @@ public class ComparatorController {
     public ModelAndView comparePages(@PathVariable("siteId") int siteId, @PathVariable("idA") int pageIdA, @PathVariable("idB") int pageIdB) {
         ModelAndView mav = new ModelAndView("/compare");
 
-        Document a = pageRepository.getById(pageIdA).getDocument();
-        Document b = pageRepository.getById(pageIdB).getDocument();
-        List<String> listA = Arrays.asList(a.outerHtml().split("\n"));
-        List<String> listB = Arrays.asList(b.outerHtml().split("\n"));
+        Page a = pageRepository.getById(pageIdA);
+        Page b = pageRepository.getById(pageIdB);
+        List<String> listA = Arrays.asList(a.getDocument().outerHtml().split("\n"));
+        List<String> listB = Arrays.asList(b.getDocument().outerHtml().split("\n"));
+
+        for (TextNode tn :
+                a.getDocument().textNodes()) {
+            listA.add(tn.text());
+        }
+        for (TextNode tn :
+                b.getDocument().textNodes()) {
+            listB.add(tn.text());
+        }
+
+//        for (TextNode tn :
+//                a.getDocument().textNodes()) {
+//            listA.add(Jsoup.clean(tn.text(), Whitelist.basic()));
+//        }
+//        for (TextNode tn :
+//                b.getDocument().textNodes()) {
+//            listB.add(Jsoup.clean(tn.text(), Whitelist.basic()));
+//        }
 
         Map<Integer, String> pageOptions = new LinkedHashMap<Integer, String>();
+
+        a.setDocument(new Document(Jsoup.clean(a.getDocument().outerHtml(), Whitelist.basic())));
+        b.setDocument(new Document(Jsoup.clean(b.getDocument().outerHtml(), Whitelist.basic())));
 
         Site site = siteRepository.getById(siteId);
         site.setPages(pageRepository.getPagesBySiteId(siteId));

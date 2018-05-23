@@ -61,6 +61,11 @@ public class SiteController {
     @RequestMapping(value = "/site/parse/{siteId}", method = RequestMethod.GET)
     public ModelAndView siteParse(@PathVariable("siteId") int siteId) {
         Site site = siteRepository.getById(siteId);
+        List<Page> pages = pageRepository.getPagesBySiteId(siteId);
+        for (Page page :
+                pages) {
+            pageRepository.delete(page.getPageId());
+        }
         parsingService.parseSite(site);
         for (Page page:
                 site.getPages()) {

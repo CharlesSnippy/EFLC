@@ -22,57 +22,63 @@
                 font-size: 0.8em;
             }
         </style>
-        <h1>Sites index</h1>
-        <c:choose>
-            <c:when test="${not empty allSites}">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">URL</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
 
-                    <c:forEach items="${allSites}" var="item">
-                        <tr>
-                            <td>
-                                    ${item.siteId}
-                            </td>
-                            <td>
-                                <a href="${item.url}">${item.url}</a>
-                            </td>
-                            <td>
-                                None
-                            </td>
-                            <td>
-                                <ul class="nav nav-pills">
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-                                           role="button" aria-haspopup="true" aria-expanded="false">Action</a>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="${comparePages}${item.siteId}">Compare
-                                                pages</a>
-                                            <a class="dropdown-item" href="${siteParse}${item.siteId}">Parse</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="${siteDelete}${item.siteId}">Remove</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
-                    </c:forEach>
+        <div class="card mb-3">
+            <div class="card-header">Sites index</div>
+            <div class="card-body">
+                <c:choose>
+                    <c:when test="${not empty allSites}">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">URL</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                    </tbody>
-                </table>
-            </c:when>
+                            <c:forEach items="${allSites}" var="item">
+                                <tr>
+                                    <td>
+                                            ${item.siteId}
+                                    </td>
+                                    <td>
+                                        <a href="${item.url}">${item.url}</a>
+                                    </td>
+                                    <td>
+                                        None
+                                    </td>
+                                    <td>
+                                        <ul class="nav nav-pills">
+                                            <li class="nav-item dropdown">
+                                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+                                                   role="button" aria-haspopup="true" aria-expanded="false">Action</a>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="${comparePages}${item.siteId}">Compare
+                                                        pages</a>
+                                                    <a class="dropdown-item" href="${siteParse}${item.siteId}">Parse</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item"
+                                                       href="${siteDelete}${item.siteId}">Remove</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </c:forEach>
 
-            <c:otherwise>
-                <p><em>No Site available</em></p>
-            </c:otherwise>
-        </c:choose>
+                            </tbody>
+                        </table>
+                    </c:when>
+
+                    <c:otherwise>
+                        <p><em>No Site available</em></p>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
     </jsp:body>
 
 </page:template>

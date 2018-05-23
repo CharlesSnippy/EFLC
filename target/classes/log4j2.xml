@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <!--Repository Loggers-->
+        <Logger name= "com.edu.repositories.SiteRepository" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name= "com.edu.repositories.PageRepository" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name= "com.edu.repositories.CriteriaRepository" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <!--Service Loggers-->
+        <Logger name= "com.edu.services.parsing.ParsingServiceImpl" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <!-- Root Logger -->
+        <Root level="all">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+
+
+</Configuration>

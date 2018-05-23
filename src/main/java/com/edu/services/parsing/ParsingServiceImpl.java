@@ -2,8 +2,12 @@ package com.edu.services.parsing;
 
 import com.edu.mvc.models.Page;
 import com.edu.mvc.models.Site;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
+import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -14,21 +18,26 @@ import java.util.List;
 
 public class ParsingServiceImpl implements ParsingService {
 
+    static final Logger logger = LogManager.getLogger(ParsingServiceImpl.class);
+
     private static String LINK_ATTRIBUTE_KEY = "abs:href";
 
     @Override
     public Document parsePage(String url) {
+        logger.info("parsePage:" + url);
         Document doc = null;
         try {
-            //TODO check for 404
-            Connection.Response res = Jsoup.connect(url).timeout(10 * 1000).execute();
-            String contentType = res.contentType();
-            if (contentType.contains("text/")) {
-                doc = Jsoup.connect(url).get();
-//            } else {
-//                if(contentType.contains("application/pdf/")) {
-//                  //TODO check for documents like PDF
-//                }
+            try {
+                Connection.Response res = Jsoup.connect(url).timeout(10 * 1000).execute();
+                String contentType = res.contentType();
+                if (contentType.contains("text/")) {
+                    doc = Jsoup.connect(url).get();
+                    //TODO check for documents like PDF
+                }
+            } catch (UnsupportedMimeTypeException typeEx) {
+                logger.error(typeEx.getMessage() + " " + typeEx.getMimeType() + " at " + typeEx.getUrl());
+            } catch (HttpStatusException statusException) {
+                logger.error(statusException.getMessage() + " " + statusException.getStatusCode() + " at " + statusException.getUrl());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -38,11 +47,13 @@ public class ParsingServiceImpl implements ParsingService {
 
     @Override
     public void parseSite(Site site) {
+        logger.info("parseSite:" + site.getUrl());
         getAllPages(site.getUrl(), site);
     }
 
     @Override
     public List<DiffResult> getDifferences(List<String> a, List<String> b) {
+        logger.info("getDifferences:");
         List<DiffResult> results = new ArrayList<>();
         int[][] m = prepareMatrix(a, b);
         getDiff(m, a, b, b.size(), a.size(), results);
@@ -55,7 +66,9 @@ public class ParsingServiceImpl implements ParsingService {
         newPage.setUrl(url);
         newPage.setDocument(parsePage(url));
         List<Page> pages = site.getPages();
-        pages.add(newPage);
+        if(newPage.getDocument() != null) {
+            pages.add(newPage);
+        }
         site.setPages(pages);
 
         if (newPage.getDocument() != null) {

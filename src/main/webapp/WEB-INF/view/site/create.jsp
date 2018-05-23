@@ -15,18 +15,17 @@
 
         <c:url value="/site/create/confirm" var="siteCreateConfirm"/>
 
-        <style>
-            .code-area {
-                font-family: 'Courier New';
-                font-size: 0.8em;
-            }
-        </style>
-        <h1>Site create page</h1>
-        <springform:form cssClass="form-group" method="post" modelAttribute="newSite" action="${siteCreateConfirm}">
-            <label for="pageUrl">siteUrl</label>
-            <springform:input cssClass="form-control" id="pageUrl" path="url"/><br/>
-            <springform:button class="btn btn-primary">Создать</springform:button>
-        </springform:form>
+        <div class="card mb-3">
+            <div class="card-header">Добавить сайт</div>
+            <div class="card-body">
+                <springform:form cssClass="form-group" method="post" modelAttribute="newSite"
+                                 action="${siteCreateConfirm}">
+                    <label for="pageUrl">siteUrl</label>
+                    <springform:input cssClass="form-control" id="pageUrl" path="url"/><br/>
+                    <springform:button class="btn btn-primary">Создать</springform:button>
+                </springform:form>
+            </div>
+        </div>
     </jsp:body>
 
 </page:template>

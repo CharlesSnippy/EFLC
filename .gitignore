@@ -48,3 +48,4 @@ Temporary Items
 *.iml
 *.class
 *.class
+target/classes/com/edu/mvc/controllers/MainController.class

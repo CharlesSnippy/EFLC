@@ -1,6 +1,8 @@
 package com.edu.repositories;
 
 import com.edu.mvc.models.Page;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,12 +25,13 @@ public class PageRepository {
 
     private JdbcTemplate jdbcTemplate;
 
+    static final Logger logger = LogManager.getLogger(PageRepository.class);
     private static String TABLE_NAME = "PAGE";
 
     @PostConstruct
     public void init() {
-        System.out.println("PageRepository postConstruct is called. datasource = " + dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
+        logger.info("postConstruct is called. datasource = " + dataSource);
     }
 
     RowMapper<Page> pageRowMapper = new RowMapper<Page>() {
@@ -39,12 +42,13 @@ public class PageRepository {
             page.setSiteId(resultSet.getInt("SITEID"));
             page.setUrl(resultSet.getString("URL"));
             page.setDocument(Jsoup.parse(resultSet.getString("PAGEDOC")));
-            System.out.println("Getting " + Page.class.getName() + ": " + page.toString());
+            logger.info("mapRow:" + page.getUrl());
             return page;
         }
     };
 
     public void create(Page page) {
+        logger.info("create:" + page.getUrl());
         String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (SITEID, URL, PAGEDOC) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -62,6 +66,7 @@ public class PageRepository {
     }
 
     public Page getById(int sitePageId) {
+        logger.info("getById:" + sitePageId);
         String SQL_GET_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE ID = ?";
         return jdbcTemplate.queryForObject(SQL_GET_BY_ID, new Object[]{
                 sitePageId
@@ -69,11 +74,13 @@ public class PageRepository {
     }
 
     public List<Page> getAll() {
+        logger.info("getAll:");
         String SQL_GET_ALL = "SELECT * FROM " + TABLE_NAME + " ORDER BY ID";
         return jdbcTemplate.query(SQL_GET_ALL, pageRowMapper);
     }
 
     public void update(Page page) {
+        logger.info("update:" + page.getUrl());
         String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET URL = ? WHERE ID = ?";
         jdbcTemplate.update(SQL_UPDATE,
                 page.getUrl(),
@@ -81,14 +88,15 @@ public class PageRepository {
     }
 
     public void delete(int sitePageId) {
+        logger.info("delete:" + sitePageId);
         String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE ID = ?";
         jdbcTemplate.update(SQL_DELETE,
                 sitePageId);
     }
 
 
-
-    public List<Page> getPagesBySiteId (int siteId) {
+    public List<Page> getPagesBySiteId(int siteId) {
+        logger.info("getPagesBySiteId:" + siteId);
         String SQL_GET_PAGES_BY_SITE_ID = "SELECT * FROM " + TABLE_NAME + " WHERE SITEID = ? ORDER BY ID";
         return jdbcTemplate.query(SQL_GET_PAGES_BY_SITE_ID, new Object[]{
                 siteId

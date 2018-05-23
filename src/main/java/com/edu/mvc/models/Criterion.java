@@ -1,6 +1,6 @@
 package com.edu.mvc.models;
 
-public class Criteria {
+public class Criterion {
 
     private int criteriaId;
     private String name;

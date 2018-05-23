@@ -1,7 +1,8 @@
 package com.edu.repositories;
 
-import com.edu.mvc.models.Criteria;
-import org.jsoup.Jsoup;
+import com.edu.mvc.models.Criterion;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -23,68 +24,74 @@ public class CriteriaRepository {
 
     private JdbcTemplate jdbcTemplate;
 
+    static final Logger logger = LogManager.getLogger(CriteriaRepository.class);
     private static String TABLE_NAME = "CRITERIA";
 
     @PostConstruct
     public void init() {
-        System.out.println("CriteriaRepository postConstruct is called. datasource = " + dataSource);
         jdbcTemplate = new JdbcTemplate(dataSource);
+        logger.info("postConstruct is called. datasource = " + dataSource);
     }
 
-    RowMapper<Criteria> pageRowMapper = new RowMapper<Criteria>() {
+    RowMapper<Criterion> pageRowMapper = new RowMapper<Criterion>() {
         @Override
-        public Criteria mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-            Criteria criteria = new Criteria();
-            criteria.setCriteriaId(resultSet.getInt("ID"));
-            criteria.setName(resultSet.getString("NAME"));
-            criteria.setShortDescription(resultSet.getString("SHORTDESC"));
-            criteria.setLongDescription(resultSet.getString("LONGDESC"));
-            criteria.setLongDescription(resultSet.getString("LONGDESC"));
-            criteria.setDictionary(resultSet.getString("DICTIONARY"));
-            System.out.println("Getting " + Criteria.class.getName() + ": " + criteria.toString());
-            return criteria;
+        public Criterion mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+            Criterion criterion = new Criterion();
+            criterion.setCriteriaId(resultSet.getInt("ID"));
+            criterion.setName(resultSet.getString("NAME"));
+            criterion.setShortDescription(resultSet.getString("SHORTDESC"));
+            criterion.setLongDescription(resultSet.getString("LONGDESC"));
+            criterion.setLongDescription(resultSet.getString("LONGDESC"));
+            criterion.setDictionary(resultSet.getString("DICTIONARY"));
+            logger.info("mapRow:" + criterion.getName());
+            return criterion;
         }
     };
 
-    public void create(Criteria criteria) {
-        String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (NAME, SHORTDESC, LONGDESC, DICTIONARY) VALUES (?, ?, ?, ?)";
+    public void create(Criterion criterion) {
+        logger.info("create:" + criterion.getName());
+        String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (NAME, SHORTDESC, LONGDESC, DICT) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, criteria.getName());
-                preparedStatement.setString(2, criteria.getShortDescription());
-                preparedStatement.setString(3, criteria.getLongDescription());
-                preparedStatement.setString(4, criteria.getDictionary());
+                preparedStatement.setString(1, criterion.getName());
+                preparedStatement.setString(2, criterion.getShortDescription());
+                preparedStatement.setString(3, criterion.getLongDescription());
+                preparedStatement.setString(4, criterion.getDictionary());
                 return preparedStatement;
             }
         }, keyHolder);
-        criteria.setCriteriaId((Integer) keyHolder.getKeys().get("id"));
+        criterion.setCriteriaId((Integer) keyHolder.getKeys().get("id"));
     }
 
-    public Criteria getById(int criteriaId) {
+    public Criterion getById(int criteriaId) {
+        logger.info("getById:" + criteriaId);
         String SQL_GET_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE ID = ?";
         return jdbcTemplate.queryForObject(SQL_GET_BY_ID, new Object[]{
                 criteriaId
         }, pageRowMapper);
     }
 
-    public List<Criteria> getAll() {
+    public List<Criterion> getAll() {
+        logger.info("getAll:");
         String SQL_GET_ALL = "SELECT * FROM " + TABLE_NAME + " ORDER BY ID";
         return jdbcTemplate.query(SQL_GET_ALL, pageRowMapper);
     }
 
-    public void update(Criteria criteria) {
-        String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET NAME = ?, SHORTDESC = ?, LONGDESC = ?, DICTIONARY = ? WHERE ID = ?";
+    public void update(Criterion criterion) {
+        logger.info("update:" + criterion.getName());
+        String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET NAME = ?, SHORTDESC = ?, LONGDESC = ?, DICT = ? WHERE ID = ?";
         jdbcTemplate.update(SQL_UPDATE,
-                criteria.getName(),
-                criteria.getShortDescription(),
-                criteria.getLongDescription(),
-                criteria.getDictionary());
+                criterion.getName(),
+                criterion.getShortDescription(),
+                criterion.getLongDescription(),
+                criterion.getDictionary());
     }
 
     public void delete(int criteriaId) {
+        logger.info("delete:" + criteriaId);
         String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE ID = ?";
         jdbcTemplate.update(SQL_DELETE,
                 criteriaId);

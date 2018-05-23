@@ -53,9 +53,9 @@
                 </a>
             </li>
             <%--<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">--%>
-                <%--<a class="nav-link" href="${compare}">--%>
-                    <%--<span class="nav-link-text">Compare pages</span>--%>
-                <%--</a>--%>
+            <%--<a class="nav-link" href="${compare}">--%>
+            <%--<span class="nav-link-text">Compare pages</span>--%>
+            <%--</a>--%>
             <%--</li>--%>
         </ul>
         <ul class="navbar-nav ml-auto">
@@ -76,13 +76,13 @@
     </div>
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
-    <footer class="sticky-footer">
-        <div class="container">
-            <div class="text-center">
-                <small>Copyright © Your Website 2018</small>
-            </div>
-        </div>
-    </footer>
+    <%--<footer class="sticky-footer">--%>
+    <%--<div class="container">--%>
+    <%--<div class="text-center">--%>
+    <%--<small>Copyright © Your Website 2018</small>--%>
+    <%--</div>--%>
+    <%--</div>--%>
+    <%--</footer>--%>
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fa fa-angle-up"></i>
@@ -119,6 +119,30 @@
     <script src="${jquery_easing_js}"></script>
     <!-- Custom scripts for all pages-->
     <script src="${sbadmin_js}"></script>
+
+    <%--<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_USER', 'ROLE_USER')" var="isUSer"/>--%>
+
+
+    <%--<c:if test="${not isUSer}">--%>
+    <%--<li style="padding-top: 15px; padding-bottom: 15px; color: red">--%>
+    <%--<c:if test="${empty param.error}">--%>
+    <%--Вы не вошли в приложение--%>
+    <%--</c:if>--%>
+    <%--</li>--%>
+    <%--<li><a style="color: Green;" href="<c:url value="/login.html"/>">Login</a></li>--%>
+    <%--</c:if>--%>
+
+
+    <%--<c:if test="${isUSer}">--%>
+    <%--<li style="padding-top: 15px; padding-bottom: 15px; color: green">--%>
+    <%--Вы вошли как:--%>
+    <%--<security:authentication property="principal.username"/> с ролью:--%>
+    <%--<b><security:authentication property="principal.authorities"/></b>--%>
+
+    <%--</li>--%>
+    <%--<li><a style="color: red;" href="<c:url value="/j_spring_security_logout"/>">Logout</a></li>--%>
+    <%--</c:if>    --%>
+
 </div>
 </body>
 
