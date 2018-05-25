@@ -45,6 +45,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-*.class
-target/classes/com/edu/mvc/controllers/MainController.class
-*/target/**
+
+/*.iml
+/target/
+/out/
+/.idea/
