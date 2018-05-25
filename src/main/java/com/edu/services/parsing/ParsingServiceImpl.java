@@ -32,7 +32,6 @@ public class ParsingServiceImpl implements ParsingService {
     PageRepository pageRepository;
 
     static final Logger logger = LogManager.getLogger(ParsingServiceImpl.class);
-
     private static String LINK_ATTRIBUTE_KEY = "abs:href";
 
     @Override
@@ -42,7 +41,7 @@ public class ParsingServiceImpl implements ParsingService {
 
     @Override
     public Document parsePage(String url) {
-        logger.info("parsePage:" + url);
+        logger.info("parsePage({})", url);
         Document doc = null;
         try {
             try {
@@ -65,7 +64,7 @@ public class ParsingServiceImpl implements ParsingService {
 
     @Override
     public void parseSite(Site site) {
-        logger.info("parseSite:" + site.getUrl());
+        logger.info("parseSite({})", site.getUrl());
 //        TODO expand parsing not only by getting links from first page
 
         //Nullify site
@@ -100,6 +99,32 @@ public class ParsingServiceImpl implements ParsingService {
         }
     }
 
+    @Override
+    public List<String> parseLinks(Document page) {
+        logger.info("parseLinks({})", page.baseUri());
+        List<String> links = new ArrayList<>();
+        Elements selected = page.select("a[href]");
+        for (Element link : selected) {
+            links.add(link.attr(LINK_ATTRIBUTE_KEY));
+        }
+        return links;
+    }
+
+    /*
+        supporting methods
+     */
+
+    private List<String> getValidLinks(String baseUrl, List<String> urlList) {
+        List<String> validLinks = new ArrayList<>();
+        for (String url :
+                urlList) {
+            if (url.startsWith("/") || url.startsWith(baseUrl)) {
+                validLinks.add(url);
+            }
+        }
+        return validLinks;
+    }
+
     private Page makeParse(String urlToParse, Site site) {
         Document parsedDocument = parsePage(urlToParse);
         Page parsingPage = new Page();
@@ -128,27 +153,6 @@ public class ParsingServiceImpl implements ParsingService {
         if (!to.contains(link)) {
             to.add(link);
         }
-    }
-
-    @Override
-    public List<String> parseLinks(Document page) {
-        List<String> links = new ArrayList<>();
-        Elements selected = page.select("a[href]");
-        for (Element link : selected) {
-            links.add(link.attr(LINK_ATTRIBUTE_KEY));
-        }
-        return links;
-    }
-
-    private List<String> getValidLinks(String baseUrl, List<String> urlList) {
-        List<String> validLinks = new ArrayList<>();
-        for (String url :
-                urlList) {
-            if (url.startsWith("/") || url.startsWith(baseUrl)) {
-                validLinks.add(url);
-            }
-        }
-        return validLinks;
     }
 
 }

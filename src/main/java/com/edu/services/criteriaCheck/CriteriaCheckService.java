@@ -1,9 +1,11 @@
 package com.edu.services.criteriaCheck;
 
 import com.edu.mvc.models.CheckResult;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface CriteriaCheckService {
 
     /**

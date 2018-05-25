@@ -1,11 +1,12 @@
 package com.edu.mvc.controllers;
 
 import com.edu.mvc.models.Page;
+import com.edu.mvc.models.Site;
 import com.edu.repositories.PageRepository;
 import com.edu.repositories.SiteRepository;
 import com.edu.services.parsing.ParsingService;
-import com.edu.services.parsing.ParsingServiceImpl;
-import com.edu.mvc.models.Site;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,8 +29,11 @@ public class SiteController {
     @Autowired
     ParsingService parsingService;
 
+    static final Logger logger = LogManager.getLogger(SiteController.class);
+
     @RequestMapping(value = "/site/all")
     public ModelAndView siteAll() {
+        logger.info("siteAll()");
         ModelAndView mav = new ModelAndView("/index");
         mav.addObject("allSites", siteRepository.getAll());
         return mav;
@@ -37,6 +41,7 @@ public class SiteController {
 
     @RequestMapping(value = "/site/create/confirm")
     public ModelAndView siteCreationConfirm(@ModelAttribute("newSite") Site newSite) {
+        logger.info("siteCreationConfirm({})", newSite);
         //TODO entered data validation
         ModelAndView mav = new ModelAndView("redirect:/");
         newSite.setState(Site.STATE_CREATED);
@@ -46,11 +51,13 @@ public class SiteController {
 
     @RequestMapping(value = "/site/create", method = RequestMethod.GET)
     public ModelAndView getSite() {
+        logger.info("getSite()");
         return new ModelAndView("/site/create", "newSite", new Site());
     }
 
     @RequestMapping(value = "/site/delete/{siteId}", method = RequestMethod.GET)
     public ModelAndView siteDelete(@PathVariable("siteId") int siteId) {
+        logger.info("siteDelete({})", siteId);
         List<Page> pages = pageRepository.getPagesBySiteId(siteId);
         for (Page page :
                 pages) {
@@ -62,6 +69,7 @@ public class SiteController {
 
     @RequestMapping(value = "/site/parse/{siteId}", method = RequestMethod.GET)
     public ModelAndView siteParse(@PathVariable("siteId") int siteId) {
+        logger.info("siteParse({})", siteId);
         Site site = siteRepository.getById(siteId);
         parsingService.parseSite(site);
         site.setState(Site.STATE_PARSED);

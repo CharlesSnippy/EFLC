@@ -15,7 +15,6 @@ public class Site {
     private List<Page> pages = new ArrayList<>();
 
 
-
     public int getSiteId() {
         return siteId;
     }
@@ -35,7 +34,6 @@ public class Site {
     public List<Page> getPages() {
         return pages;
     }
-
 
 
     public void setSiteId(int siteId) {

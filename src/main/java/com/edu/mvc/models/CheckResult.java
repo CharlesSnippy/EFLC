@@ -10,6 +10,7 @@ public class CheckResult {
     private String answer;
     private List<String> block;
 
+
     public int getResultId() {
         return resultId;
     }
@@ -29,7 +30,6 @@ public class CheckResult {
     public List<String> getBlock() {
         return block;
     }
-
 
 
     public void setResultId(int resultId) {

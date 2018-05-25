@@ -5,8 +5,9 @@ import com.edu.mvc.models.Site;
 import com.edu.repositories.PageRepository;
 import com.edu.repositories.SiteRepository;
 import com.edu.services.comparing.ComparingService;
-import com.edu.services.comparing.ComparingServiceImpl;
 import com.edu.services.parsing.DiffResult;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.TextNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,15 +30,21 @@ public class ComparatorController {
     @Autowired
     PageRepository pageRepository;
 
-    private ComparingService comparingService = new ComparingServiceImpl();
+    @Autowired
+    ComparingService comparingService;
+
+    static final Logger logger = LogManager.getLogger(ComparatorController.class);
 
     @RequestMapping(value = "/compare")
     public ModelAndView compareIndex() {
+        logger.info("compareIndex()");
         return new ModelAndView("/compare");
     }
 
     @RequestMapping(value = "/compare/{siteId}/{idA}/{idB}")
     public ModelAndView comparePages(@PathVariable("siteId") int siteId, @PathVariable("idA") int pageIdA, @PathVariable("idB") int pageIdB) {
+        logger.info("comparePages({}, {}, {})", siteId, pageIdA, pageIdB);
+
         ModelAndView mav = new ModelAndView("/compare");
 
         Page a = pageRepository.getById(pageIdA);
@@ -75,6 +82,8 @@ public class ComparatorController {
 
     @RequestMapping(value = "/compare/{siteId}")
     public ModelAndView comparePageIndexBySite(@PathVariable("siteId") int siteId) {
+        logger.info("comparePageIndexBySite({})", siteId);
+
         ModelAndView mav = new ModelAndView("/compare");
 
         Map<Integer, String> pageOptions = new LinkedHashMap<Integer, String>();
@@ -95,6 +104,7 @@ public class ComparatorController {
 
     @RequestMapping(value = "/compare/{siteId}/getDiff")
     public ModelAndView comparePageIndexBySite(@PathVariable("siteId") int siteId, @ModelAttribute("diffResult") DiffResult diffResult) {
+        logger.info("comparePageIndexBySite({}, {})", siteId, diffResult);
         return new ModelAndView("redirect:/compare/" + siteId + "/" + diffResult.getFirstIndex() + "/" + diffResult.getSecondIndex());
     }
 

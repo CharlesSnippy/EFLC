@@ -5,8 +5,8 @@ import com.edu.repositories.PageRepository;
 import com.edu.repositories.SiteRepository;
 import com.edu.services.comparing.ComparingService;
 import com.edu.services.parsing.ParsingService;
-import com.edu.services.parsing.ParsingServiceImpl;
-import org.jsoup.Jsoup;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
@@ -32,8 +32,11 @@ public class TestController {
     @Autowired
     ComparingService comparingService;
 
+    static final Logger logger = LogManager.getLogger(TestController.class);
+
     @RequestMapping(value = "/test")
     public ModelAndView test() {
+        logger.info("test()");
         ModelAndView mav = new ModelAndView("/test/test");
 
         String url = "http://sch10spb.ru/";

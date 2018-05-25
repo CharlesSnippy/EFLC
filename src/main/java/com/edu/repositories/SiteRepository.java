@@ -29,25 +29,25 @@ public class SiteRepository {
 
     @PostConstruct
     public void init() {
+        logger.info("init()");
         jdbcTemplate = new JdbcTemplate(dataSource);
-        logger.info("postConstruct is called. datasource = " + dataSource);
     }
 
     RowMapper<Site> siteRowMapper = new RowMapper<Site>() {
         @Override
         public Site mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+            logger.info("siteRowMapper");
             Site site = new Site();
             site.setSiteId(resultSet.getInt("ID"));
             site.setUrl(resultSet.getString("URL"));
             site.setTitle(resultSet.getString("TITLE"));
             site.setState(resultSet.getInt("STATE"));
-            logger.info("mapRow:" + site.getUrl());
             return site;
         }
     };
 
     public void create(Site site) {
-        logger.info("create:" + site.getUrl());
+        logger.info("create({})", site.getUrl());
         String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (URL, TITLE, STATE) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -64,7 +64,7 @@ public class SiteRepository {
     }
 
     public Site getById(int siteId) {
-        logger.info("getById:" + siteId);
+        logger.info("getById({})", siteId);
         String SQL_GET_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE ID = ?";
         return jdbcTemplate.queryForObject(SQL_GET_BY_ID, new Object[]{
                 siteId
@@ -72,13 +72,13 @@ public class SiteRepository {
     }
 
     public List<Site> getAll() {
-        logger.info("getAll:");
+        logger.info("getAll()");
         String SQL_GET_ALL = "SELECT * FROM " + TABLE_NAME + " ORDER BY ID";
         return jdbcTemplate.query(SQL_GET_ALL, siteRowMapper);
     }
 
     public void update(Site site) {
-        logger.info("update:" + site.getUrl());
+        logger.info("update({})", site.getUrl());
         String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET URL = ?, TITLE = ?, STATE = ? WHERE ID = ?";
         jdbcTemplate.update(SQL_UPDATE,
                 site.getUrl(),
@@ -89,7 +89,7 @@ public class SiteRepository {
     }
 
     public void delete(int siteId) {
-        logger.info("delete:" + siteId);
+        logger.info("delete({})", siteId);
         String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " CASCADE WHERE ID = ?";
         jdbcTemplate.update(SQL_DELETE,
                 siteId);

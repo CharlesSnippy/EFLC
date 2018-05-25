@@ -11,7 +11,6 @@ public class Page {
     private Document document;
 
 
-
     public int getPageId() {
         return pageId;
     }
@@ -31,7 +30,6 @@ public class Page {
     public Document getDocument() {
         return document;
     }
-
 
 
     public void setPageId(int pageId) {

@@ -47,6 +47,5 @@ Temporary Items
 .apdisk
 *.iml
 *.class
-*.class
 target/classes/com/edu/mvc/controllers/MainController.class
-target/classes/com/edu/mvc/controllers/MainController.class
+*/target/**

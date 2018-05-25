@@ -30,26 +30,26 @@ public class PageRepository {
 
     @PostConstruct
     public void init() {
+        logger.info("init()");
         jdbcTemplate = new JdbcTemplate(dataSource);
-        logger.info("postConstruct is called. datasource = " + dataSource);
     }
 
     RowMapper<Page> pageRowMapper = new RowMapper<Page>() {
         @Override
         public Page mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+            logger.info("pageRowMapper");
             Page page = new Page();
             page.setPageId(resultSet.getInt("ID"));
             page.setSiteId(resultSet.getInt("SITEID"));
             page.setUrl(resultSet.getString("URL"));
             page.setTitle(resultSet.getString("TITLE"));
             page.setDocument(Jsoup.parse(resultSet.getString("PAGEDOC")));
-            logger.info("mapRow:" + page.getUrl());
             return page;
         }
     };
 
     public void create(Page page) {
-        logger.info("create:" + page.getUrl());
+        logger.info("create({})", page.getUrl());
         String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (SITEID, URL, TITLE, PAGEDOC) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -67,7 +67,7 @@ public class PageRepository {
     }
 
     public Page getById(int sitePageId) {
-        logger.info("getById:" + sitePageId);
+        logger.info("getById({})", sitePageId);
         String SQL_GET_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE ID = ?";
         return jdbcTemplate.queryForObject(SQL_GET_BY_ID, new Object[]{
                 sitePageId
@@ -75,13 +75,13 @@ public class PageRepository {
     }
 
     public List<Page> getAll() {
-        logger.info("getAll:");
+        logger.info("getAll()");
         String SQL_GET_ALL = "SELECT * FROM " + TABLE_NAME + " ORDER BY ID";
         return jdbcTemplate.query(SQL_GET_ALL, pageRowMapper);
     }
 
     public void update(Page page) {
-        logger.info("update:" + page.getUrl());
+        logger.info("update({})", page.getUrl());
         String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET SITEID = ?, URL = ?, TITLE = ?, PAGEDOC = ? WHERE ID = ?";
         jdbcTemplate.update(SQL_UPDATE,
                 page.getSiteId(),
@@ -93,7 +93,7 @@ public class PageRepository {
     }
 
     public void delete(int sitePageId) {
-        logger.info("delete:" + sitePageId);
+        logger.info("delete({})", sitePageId);
         String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE ID = ?";
         jdbcTemplate.update(SQL_DELETE,
                 sitePageId);
@@ -101,7 +101,7 @@ public class PageRepository {
 
 
     public List<Page> getPagesBySiteId(int siteId) {
-        logger.info("getPagesBySiteId:" + siteId);
+        logger.info("getPagesBySiteId({})", siteId);
         String SQL_GET_PAGES_BY_SITE_ID = "SELECT * FROM " + TABLE_NAME + " WHERE SITEID = ? ORDER BY TITLE";
         return jdbcTemplate.query(SQL_GET_PAGES_BY_SITE_ID, new Object[]{
                 siteId

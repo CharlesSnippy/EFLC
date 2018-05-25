@@ -29,13 +29,14 @@ public class CriteriaRepository {
 
     @PostConstruct
     public void init() {
+        logger.info("init()");
         jdbcTemplate = new JdbcTemplate(dataSource);
-        logger.info("postConstruct is called. datasource = " + dataSource);
     }
 
     RowMapper<Criterion> pageRowMapper = new RowMapper<Criterion>() {
         @Override
         public Criterion mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+            logger.info("pageRowMapper");
             Criterion criterion = new Criterion();
             criterion.setCriteriaId(resultSet.getInt("ID"));
             criterion.setName(resultSet.getString("NAME"));
@@ -43,13 +44,12 @@ public class CriteriaRepository {
             criterion.setLongDescription(resultSet.getString("LONGDESC"));
             criterion.setLongDescription(resultSet.getString("LONGDESC"));
             criterion.setDictionary(resultSet.getString("DICTIONARY"));
-            logger.info("mapRow:" + criterion.getName());
             return criterion;
         }
     };
 
     public void create(Criterion criterion) {
-        logger.info("create:" + criterion.getName());
+        logger.info("create({})", criterion.getName());
         String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (NAME, SHORTDESC, LONGDESC, DICT) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -67,7 +67,7 @@ public class CriteriaRepository {
     }
 
     public Criterion getById(int criteriaId) {
-        logger.info("getById:" + criteriaId);
+        logger.info("getById({})", criteriaId);
         String SQL_GET_BY_ID = "SELECT * FROM " + TABLE_NAME + " WHERE ID = ?";
         return jdbcTemplate.queryForObject(SQL_GET_BY_ID, new Object[]{
                 criteriaId
@@ -75,13 +75,13 @@ public class CriteriaRepository {
     }
 
     public List<Criterion> getAll() {
-        logger.info("getAll:");
+        logger.info("getAll()");
         String SQL_GET_ALL = "SELECT * FROM " + TABLE_NAME + " ORDER BY ID";
         return jdbcTemplate.query(SQL_GET_ALL, pageRowMapper);
     }
 
     public void update(Criterion criterion) {
-        logger.info("update:" + criterion.getName());
+        logger.info("update({})", criterion.getName());
         String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET NAME = ?, SHORTDESC = ?, LONGDESC = ?, DICT = ? WHERE ID = ?";
         jdbcTemplate.update(SQL_UPDATE,
                 criterion.getName(),
@@ -91,7 +91,7 @@ public class CriteriaRepository {
     }
 
     public void delete(int criteriaId) {
-        logger.info("delete:" + criteriaId);
+        logger.info("delete({})", criteriaId);
         String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE ID = ?";
         jdbcTemplate.update(SQL_DELETE,
                 criteriaId);

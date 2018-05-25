@@ -1,9 +1,14 @@
-package com.edu.services.semanticAnalyze;
+package com.edu.services.semantic;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LSAnalyzeServiceImpl implements SemanticAnalyzeService {
+@Service
+public class LSAnalyzeServiceImpl implements SemanticService {
 
     private static final Pattern PERFECTIVEGROUND = Pattern.compile("((ив|ивши|ившись|ыв|ывши|ывшись)|((?<=[ая])(в|вши|вшись)))$");
     private static final Pattern REFLEXIVE = Pattern.compile("(с[яь])$");
@@ -18,9 +23,11 @@ public class LSAnalyzeServiceImpl implements SemanticAnalyzeService {
     private static final Pattern I = Pattern.compile("и$");
     private static final Pattern P = Pattern.compile("ь$");
     private static final Pattern NN = Pattern.compile("нн$");
+    static final Logger logger = LogManager.getLogger(LSAnalyzeServiceImpl.class);
 
     @Override
     public String stemWord(String word) {
+        logger.info("stemWord({})", word);
         word = word.toLowerCase();
         word = word.replace('ё', 'е');
         Matcher m = RVRE.matcher(word);

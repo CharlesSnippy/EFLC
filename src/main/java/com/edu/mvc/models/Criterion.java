@@ -8,6 +8,7 @@ public class Criterion {
     private String longDescription;
     private String dictionary;
 
+
     public int getCriteriaId() {
         return criteriaId;
     }
@@ -27,7 +28,6 @@ public class Criterion {
     public String getDictionary() {
         return dictionary;
     }
-
 
 
     public void setCriteriaId(int criteriaId) {

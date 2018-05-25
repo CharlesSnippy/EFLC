@@ -24,6 +24,25 @@
             <AppenderRef ref="Console"/>
         </Logger>
 
+        <!--Controller Loggers-->
+        <Logger name= "com.edu.mvc.controllers.MainController" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Logger name= "com.edu.mvc.controllers.ComparatorController" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name= "com.edu.mvc.controllers.CriteriaCheckController" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name= "com.edu.mvc.controllers.SiteController" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Logger name= "com.edu.mvc.controllers.TestController" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
         <!-- Root Logger -->
         <Root level="all">
             <AppenderRef ref="Console"/>
