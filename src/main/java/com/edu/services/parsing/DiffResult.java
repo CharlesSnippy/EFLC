@@ -1,11 +1,13 @@
 package com.edu.services.parsing;
 
+import com.edu.services.comparing.ComparingService;
+
 public class DiffResult {
 
     private String firstIndex;
     private String secondIndex;
     private String row;
-    private char type = ParsingService.TYPE_EQUAL;
+    private char type = ComparingService.TYPE_EQUAL;
 
 
 

@@ -41,6 +41,7 @@ public class PageRepository {
             page.setPageId(resultSet.getInt("ID"));
             page.setSiteId(resultSet.getInt("SITEID"));
             page.setUrl(resultSet.getString("URL"));
+            page.setTitle(resultSet.getString("TITLE"));
             page.setDocument(Jsoup.parse(resultSet.getString("PAGEDOC")));
             logger.info("mapRow:" + page.getUrl());
             return page;
@@ -49,7 +50,7 @@ public class PageRepository {
 
     public void create(Page page) {
         logger.info("create:" + page.getUrl());
-        String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (SITEID, URL, PAGEDOC) VALUES (?, ?, ?)";
+        String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (SITEID, URL, TITLE, PAGEDOC) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
@@ -57,8 +58,8 @@ public class PageRepository {
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS);
                 preparedStatement.setInt(1, page.getSiteId());
                 preparedStatement.setString(2, page.getUrl());
-                String docString = (page.getDocument() == null) ? "" : page.getDocument().toString();
-                preparedStatement.setString(3, docString);
+                preparedStatement.setString(3, page.getTitle());
+                preparedStatement.setString(4, (page.getDocument() == null) ? "" : page.getDocument().toString());
                 return preparedStatement;
             }
         }, keyHolder);
@@ -81,9 +82,13 @@ public class PageRepository {
 
     public void update(Page page) {
         logger.info("update:" + page.getUrl());
-        String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET URL = ? WHERE ID = ?";
+        String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET SITEID = ?, URL = ?, TITLE = ?, PAGEDOC = ? WHERE ID = ?";
         jdbcTemplate.update(SQL_UPDATE,
+                page.getSiteId(),
                 page.getUrl(),
+                page.getTitle(),
+                (page.getDocument() == null) ? "" : page.getDocument().toString(),
+
                 page.getPageId());
     }
 
@@ -97,7 +102,7 @@ public class PageRepository {
 
     public List<Page> getPagesBySiteId(int siteId) {
         logger.info("getPagesBySiteId:" + siteId);
-        String SQL_GET_PAGES_BY_SITE_ID = "SELECT * FROM " + TABLE_NAME + " WHERE SITEID = ? ORDER BY ID";
+        String SQL_GET_PAGES_BY_SITE_ID = "SELECT * FROM " + TABLE_NAME + " WHERE SITEID = ? ORDER BY TITLE";
         return jdbcTemplate.query(SQL_GET_PAGES_BY_SITE_ID, new Object[]{
                 siteId
         }, pageRowMapper);

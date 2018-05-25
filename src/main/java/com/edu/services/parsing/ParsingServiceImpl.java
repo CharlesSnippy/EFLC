@@ -2,6 +2,8 @@ package com.edu.services.parsing;
 
 import com.edu.mvc.models.Page;
 import com.edu.mvc.models.Site;
+import com.edu.repositories.PageRepository;
+import com.edu.repositories.SiteRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;
@@ -10,17 +12,33 @@ import org.jsoup.Jsoup;
 import org.jsoup.UnsupportedMimeTypeException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ParsingServiceImpl implements ParsingService {
+
+    @Autowired
+    SiteRepository siteRepository;
+
+    @Autowired
+    PageRepository pageRepository;
 
     static final Logger logger = LogManager.getLogger(ParsingServiceImpl.class);
 
     private static String LINK_ATTRIBUTE_KEY = "abs:href";
+
+    @Override
+    public String parseTitle(Document page) {
+        return page.selectFirst("title").text();
+    }
 
     @Override
     public Document parsePage(String url) {
@@ -48,98 +66,89 @@ public class ParsingServiceImpl implements ParsingService {
     @Override
     public void parseSite(Site site) {
         logger.info("parseSite:" + site.getUrl());
-        getAllPages(site.getUrl(), site);
+//        TODO expand parsing not only by getting links from first page
+
+        //Nullify site
+
+        site.setState(Site.STATE_CREATED);
+        siteRepository.update(site);
+
+        for (Page pageToDelete :
+                pageRepository.getPagesBySiteId(site.getSiteId())) {
+            pageRepository.delete(pageToDelete.getPageId());
+        }
+
+        //Parse base page
+
+        Page basePage = makeParse(site.getUrl(), site);
+
+        List<String> toParse = new ArrayList<>();
+        addNewLink(site.getUrl(), toParse);
+        addNewLinks(getValidLinks(site.getUrl(), parseLinks(basePage.getDocument())), toParse);
+        List<String> parsed = new ArrayList<>();
+        parsed.add(site.getUrl());
+
+        //Parse by links
+
+        for (String urlToParse : toParse) {
+            if (!parsed.contains(urlToParse)) {
+                Page parsingPage = makeParse(urlToParse, site);
+                parsed.add(urlToParse);
+                /* uncomment to parse all pages*/
+//            addNewLinks(getValidLinks(site.getUrl(), parseLinks(parsingPage.getDocument())), toParse);
+            }
+        }
+    }
+
+    private Page makeParse(String urlToParse, Site site) {
+        Document parsedDocument = parsePage(urlToParse);
+        Page parsingPage = new Page();
+        if (parsedDocument != null) {
+            parsingPage.setTitle(parseTitle(parsedDocument));
+            Cleaner cleaner = new Cleaner(Whitelist.basic());
+            parsedDocument = cleaner.clean(parsedDocument);
+            parsingPage.setSiteId(site.getSiteId());
+            parsingPage.setUrl(urlToParse);
+            parsingPage.setDocument(parsedDocument);
+            pageRepository.create(parsingPage);
+        }
+        return parsingPage;
+    }
+
+    private void addNewLinks(List<String> from, List<String> to) {
+        for (String link :
+                from) {
+            if (!to.contains(link)) {
+                to.add(link);
+            }
+        }
+    }
+
+    private void addNewLink(String link, List<String> to) {
+        if (!to.contains(link)) {
+            to.add(link);
+        }
     }
 
     @Override
-    public List<DiffResult> getDifferences(List<String> a, List<String> b) {
-        logger.info("getDifferences:");
-        List<DiffResult> results = new ArrayList<>();
-        int[][] m = prepareMatrix(a, b);
-        getDiff(m, a, b, b.size(), a.size(), results);
-        return results;
+    public List<String> parseLinks(Document page) {
+        List<String> links = new ArrayList<>();
+        Elements selected = page.select("a[href]");
+        for (Element link : selected) {
+            links.add(link.attr(LINK_ATTRIBUTE_KEY));
+        }
+        return links;
     }
 
-    private void getAllPages(String url, Site site) {
-        // TODO: check for content type
-        Page newPage = new Page();
-        newPage.setUrl(url);
-        newPage.setDocument(parsePage(url));
-        List<Page> pages = site.getPages();
-        if(newPage.getDocument() != null) {
-            pages.add(newPage);
-        }
-        site.setPages(pages);
-
-        if (newPage.getDocument() != null) {
-            Elements links = newPage.getDocument().select("a[href]");
-            for (Element link : links) {
-                if (link.hasAttr(LINK_ATTRIBUTE_KEY) && (link.attr(LINK_ATTRIBUTE_KEY).startsWith("/") || link.attr(LINK_ATTRIBUTE_KEY).startsWith(newPage.getDocument().baseUri()))) {
-                    boolean addLink = true;
-                    for (Page page : pages) {
-                        if (page.getUrl().equals(link.attr(LINK_ATTRIBUTE_KEY))) {
-                            addLink = false;
-                            break;
-                        }
-                    }
-                    if (addLink) {
-                        getAllPages(link.attr(LINK_ATTRIBUTE_KEY), site);
-                    }
-                }
+    private List<String> getValidLinks(String baseUrl, List<String> urlList) {
+        List<String> validLinks = new ArrayList<>();
+        for (String url :
+                urlList) {
+            if (url.startsWith("/") || url.startsWith(baseUrl)) {
+                validLinks.add(url);
             }
         }
+        return validLinks;
     }
 
-    private int[][] prepareMatrix(List<String> a, List<String> b) {
-        int[][] m = new int[a.size() + 1][b.size() + 1];
-
-        for (int y = 0; y < m.length; y++) {
-            for (int x = 0; x < m[y].length; x++) {
-                m[y][x] = 0;
-            }
-        }
-
-        for (int y = 1; y < m.length; y++) {
-            for (int x = 1; x < m[y].length; x++) {
-                if (a.get(y - 1).equals(b.get(x - 1))) {
-                    m[y][x] = 1 + m[y - 1][x - 1];
-                } else {
-                    m[y][x] = Math.max(m[y - 1][x], m[y][x - 1]);
-                }
-            }
-        }
-        return m;
-    }
-
-    private void getDiff(int[][] m, List<String> a, List<String> b, int x, int y, List<DiffResult> result) {
-        if ((x > 0) && (y > 0) && (a.get(y - 1).equals(b.get(x - 1)))) {
-            getDiff(m, a, b, x - 1, y - 1, result);
-            DiffResult diffResult = new DiffResult();
-            diffResult.setFirstIndex(String.valueOf(x));
-            diffResult.setSecondIndex(String.valueOf(y));
-            diffResult.setRow(a.get(y - 1));
-            diffResult.setType(TYPE_EQUAL);
-            result.add(diffResult);
-        } else {
-            if ((x > 0) && ((y == 0) || (m[y][x - 1] >= m[y - 1][x]))) {
-                getDiff(m, a, b, x - 1, y, result);
-                DiffResult diffResult = new DiffResult();
-                diffResult.setFirstIndex(String.valueOf(x));
-                diffResult.setSecondIndex("");
-                diffResult.setRow(b.get(x - 1));
-                diffResult.setType(TYPE_ADD);
-                result.add(diffResult);
-            } else {
-                if ((y > 0) && ((x == 0) || m[y][x - 1] < m[y - 1][x])) {
-                    getDiff(m, a, b, x, y - 1, result);
-                    DiffResult diffResult = new DiffResult();
-                    diffResult.setFirstIndex("");
-                    diffResult.setSecondIndex(String.valueOf(y));
-                    diffResult.setRow(a.get(y - 1));
-                    diffResult.setType(TYPE_DELETE);
-                    result.add(diffResult);
-                }
-            }
-        }
-    }
 }

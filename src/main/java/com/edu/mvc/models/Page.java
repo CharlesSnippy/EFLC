@@ -7,7 +7,10 @@ public class Page {
     private int pageId;
     private int siteId;
     private String url;
+    private String title;
     private Document document;
+
+
 
     public int getPageId() {
         return pageId;
@@ -19,6 +22,10 @@ public class Page {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public Document getDocument() {
@@ -37,6 +44,10 @@ public class Page {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setDocument(Document document) {

@@ -20,7 +20,9 @@
             <div class="card-body">
                 <springform:form cssClass="form-group" method="post" modelAttribute="newSite"
                                  action="${siteCreateConfirm}">
-                    <label for="pageUrl">siteUrl</label>
+                    <label for="pageTitle">Заголовок</label>
+                    <springform:input cssClass="form-control" id="pageTitle" path="title"/><br/>
+                    <label for="pageUrl">Адрес</label>
                     <springform:input cssClass="form-control" id="pageUrl" path="url"/><br/>
                     <springform:button class="btn btn-primary">Создать</springform:button>
                 </springform:form>

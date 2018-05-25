@@ -38,7 +38,7 @@
         </style>
 
         <div class="card mb-3">
-            <div class="card-header">Сравнение страниц сайта</div>
+            <div class="card-header">Сравнение страниц сайта ${site.title}</div>
             <div class="card-body">
                 <div class="row height-set">
                     <c:set var="settings" value="settings"/>
@@ -84,7 +84,7 @@
                         <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="list-${settings}" role="tabpanel"
                                  aria-labelledby="list-${settings}-list">
-                                <h1>${site.url}</h1>
+                                <h1>Выберите страницы для сравнения</h1>
                                 <springform:form cssClass="form-group" method="post" modelAttribute="diffResult"
                                                  action="${compare}${site.siteId}/getDiff">
                                     <div style="display:inline-block; width:40%;">
@@ -104,10 +104,10 @@
                             </div>
                             <div class="tab-pane fade" id="list-${code}" role="tabpanel"
                                  aria-labelledby="list-${code}-list">
-                                <h1>${site.url}</h1>
+                                <h1>HTML-коды страницы</h1>
                                 <div>
-                                    <a href="${firstPage.url}" class="badge badge-danger">${firstPage.url}</a>
-                                    <a href="${secondPage.url}" class="badge badge-success">${secondPage.url}</a>
+                                    <a href="${firstPage.url}" class="badge badge-danger">${firstPage.title}</a>
+                                    <a href="${secondPage.url}" class="badge badge-success">${secondPage.title}</a>
                                 </div>
                                 <div style="display:inline-block; width:40%;">
                                     <textarea class="code-area" disabled rows="15">${firstPage.document.toString().replace("&","&amp;").replace("<","&lt;").replace(">", "&gt;")}</textarea>
@@ -119,8 +119,8 @@
                             <div class="tab-pane fade" id="list-${result}" role="tabpanel"
                                  aria-labelledby="list-${result}-list">
                                 <div>
-                                    <a href="${firstPage.url}" class="badge badge-danger">${firstPage.url}</a>
-                                    <a href="${secondPage.url}" class="badge badge-success">${secondPage.url}</a>
+                                    <a href="${firstPage.url}" class="badge badge-danger">${firstPage.title}</a>
+                                    <a href="${secondPage.url}" class="badge badge-success">${secondPage.title}</a>
                                 </div>
                                 <div class="compare-result">
                                     <table>
@@ -146,7 +146,7 @@
                             </div>
                             <div class="tab-pane fade" id="list-${onlyLeft}" role="tabpanel"
                                  aria-labelledby="list-${onlyLeft}-list">
-                                <a href="${firstPage.url}" class="badge badge-danger">${firstPage.url}</a>
+                                <a href="${firstPage.url}" class="badge badge-danger">${firstPage.title}</a>
                                 <div class="compare-result">
                                     <table>
                                         <c:forEach items="${compareResult}" var="item">
@@ -163,7 +163,7 @@
                             </div>
                             <div class="tab-pane fade" id="list-${onlyRight}" role="tabpanel"
                                  aria-labelledby="list-${onlyRight}-list">
-                                <a href="${secondPage.url}" class="badge badge-success">${secondPage.url}</a>
+                                <a href="${secondPage.url}" class="badge badge-success">${secondPage.title}</a>
                                 <div class="compare-result">
                                     <table>
                                         <c:forEach items="${compareResult}" var="item">

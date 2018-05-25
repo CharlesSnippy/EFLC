@@ -25,7 +25,8 @@ public class SiteController {
     @Autowired
     PageRepository pageRepository;
 
-    private ParsingService parsingService = new ParsingServiceImpl();
+    @Autowired
+    ParsingService parsingService;
 
     @RequestMapping(value = "/site/all")
     public ModelAndView siteAll() {
@@ -38,6 +39,7 @@ public class SiteController {
     public ModelAndView siteCreationConfirm(@ModelAttribute("newSite") Site newSite) {
         //TODO entered data validation
         ModelAndView mav = new ModelAndView("redirect:/");
+        newSite.setState(Site.STATE_CREATED);
         siteRepository.create(newSite);
         return mav;
     }
@@ -61,17 +63,9 @@ public class SiteController {
     @RequestMapping(value = "/site/parse/{siteId}", method = RequestMethod.GET)
     public ModelAndView siteParse(@PathVariable("siteId") int siteId) {
         Site site = siteRepository.getById(siteId);
-        List<Page> pages = pageRepository.getPagesBySiteId(siteId);
-        for (Page page :
-                pages) {
-            pageRepository.delete(page.getPageId());
-        }
         parsingService.parseSite(site);
-        for (Page page:
-                site.getPages()) {
-            page.setSiteId(site.getSiteId());
-            pageRepository.create(page);
-        }
+        site.setState(Site.STATE_PARSED);
+        siteRepository.update(site);
         return new ModelAndView("redirect:/");
     }
 

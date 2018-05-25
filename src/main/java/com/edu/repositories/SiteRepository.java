@@ -39,6 +39,8 @@ public class SiteRepository {
             Site site = new Site();
             site.setSiteId(resultSet.getInt("ID"));
             site.setUrl(resultSet.getString("URL"));
+            site.setTitle(resultSet.getString("TITLE"));
+            site.setState(resultSet.getInt("STATE"));
             logger.info("mapRow:" + site.getUrl());
             return site;
         }
@@ -46,13 +48,15 @@ public class SiteRepository {
 
     public void create(Site site) {
         logger.info("create:" + site.getUrl());
-        String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (URL) VALUES (?)";
+        String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (URL, TITLE, STATE) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS);
                 preparedStatement.setString(1, site.getUrl());
+                preparedStatement.setString(2, site.getTitle());
+                preparedStatement.setInt(3, site.getState());
                 return preparedStatement;
             }
         }, keyHolder);
@@ -75,9 +79,12 @@ public class SiteRepository {
 
     public void update(Site site) {
         logger.info("update:" + site.getUrl());
-        String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET URL = ? WHERE ID = ?";
+        String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET URL = ?, TITLE = ?, STATE = ? WHERE ID = ?";
         jdbcTemplate.update(SQL_UPDATE,
                 site.getUrl(),
+                site.getTitle(),
+                site.getState(),
+
                 site.getSiteId());
     }
 

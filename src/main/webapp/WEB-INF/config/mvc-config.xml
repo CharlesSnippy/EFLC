@@ -45,8 +45,6 @@
     <mvc:view-controller path="/" view-name="/index"/>
     <mvc:view-controller path="/index.html" view-name="/index"/>
     <mvc:view-controller path="/login.html" view-name="/form/login"/>
-    <mvc:view-controller path="/security.html" view-name="/security/security"/>
-    <mvc:view-controller path="/security/admin.html" view-name="/security/admin"/>
 
     <!--<mvc:view-controller path="/site/" view-name="/site/"/>-->
 

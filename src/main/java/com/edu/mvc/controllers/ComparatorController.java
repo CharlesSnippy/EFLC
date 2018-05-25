@@ -4,13 +4,10 @@ import com.edu.mvc.models.Page;
 import com.edu.mvc.models.Site;
 import com.edu.repositories.PageRepository;
 import com.edu.repositories.SiteRepository;
+import com.edu.services.comparing.ComparingService;
+import com.edu.services.comparing.ComparingServiceImpl;
 import com.edu.services.parsing.DiffResult;
-import com.edu.services.parsing.ParsingService;
-import com.edu.services.parsing.ParsingServiceImpl;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.TextNode;
-import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,7 +29,7 @@ public class ComparatorController {
     @Autowired
     PageRepository pageRepository;
 
-    private ParsingService parsingService = new ParsingServiceImpl();
+    private ComparingService comparingService = new ComparingServiceImpl();
 
     @RequestMapping(value = "/compare")
     public ModelAndView compareIndex() {
@@ -57,31 +54,19 @@ public class ComparatorController {
             listB.add(tn.text());
         }
 
-//        for (TextNode tn :
-//                a.getDocument().textNodes()) {
-//            listA.add(Jsoup.clean(tn.text(), Whitelist.basic()));
-//        }
-//        for (TextNode tn :
-//                b.getDocument().textNodes()) {
-//            listB.add(Jsoup.clean(tn.text(), Whitelist.basic()));
-//        }
-
         Map<Integer, String> pageOptions = new LinkedHashMap<Integer, String>();
-
-        a.setDocument(new Document(Jsoup.clean(a.getDocument().outerHtml(), Whitelist.basic())));
-        b.setDocument(new Document(Jsoup.clean(b.getDocument().outerHtml(), Whitelist.basic())));
 
         Site site = siteRepository.getById(siteId);
         site.setPages(pageRepository.getPagesBySiteId(siteId));
         for (Page page :
                 site.getPages()) {
-            pageOptions.put(page.getPageId(), page.getUrl());
+            pageOptions.put(page.getPageId(), page.getTitle() + " | " + page.getUrl());
         }
 
         mav.addObject("site", site);
         mav.addObject("firstPage", a);
         mav.addObject("secondPage", b);
-        mav.addObject("compareResult", parsingService.getDifferences(listA, listB));
+        mav.addObject("compareResult", comparingService.getDifferences(listA, listB));
         mav.addObject("pageOptions", pageOptions);
         mav.addObject("diffResult", new DiffResult());
 
@@ -98,7 +83,7 @@ public class ComparatorController {
         site.setPages(pageRepository.getPagesBySiteId(siteId));
         for (Page page :
                 site.getPages()) {
-            pageOptions.put(page.getPageId(), page.getUrl());
+            pageOptions.put(page.getPageId(), page.getTitle() + " | " + page.getUrl());
         }
 
         mav.addObject("site", site);

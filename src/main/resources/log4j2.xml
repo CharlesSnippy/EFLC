@@ -9,18 +9,18 @@
 
     <Loggers>
         <!--Repository Loggers-->
-        <Logger name= "com.edu.repositories.SiteRepository" level="debug" additivity="false">
+        <Logger name= "com.edu.repositories.SiteRepository" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name= "com.edu.repositories.PageRepository" level="debug" additivity="false">
+        <Logger name= "com.edu.repositories.PageRepository" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name= "com.edu.repositories.CriteriaRepository" level="debug" additivity="false">
+        <Logger name= "com.edu.repositories.CriteriaRepository" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
 
         <!--Service Loggers-->
-        <Logger name= "com.edu.services.parsing.ParsingServiceImpl" level="debug" additivity="false">
+        <Logger name= "com.edu.services.parsing.ParsingServiceImpl" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
 
