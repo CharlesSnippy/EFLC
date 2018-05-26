@@ -13,24 +13,34 @@ import java.util.List;
 @Service
 public interface ParsingService {
 
-    List<String> ELEMENTS_BLACKLIST = Arrays.asList("script", "meta", "link", "img");
-
+    /**
+     * Parses content of title tag from Document
+     *
+     * @param page html Document
+     * @return page title
+     */
     String parseTitle(Document page);
 
     /**
-     * Get site by url
+     * Parses site by url
      *
-     * @param url
-     * @return
+     * @param url source link
+     * @return page in Document format
      */
     Document parsePage(String url);
 
     /**
-     * Get all links and HTML documents
+     * Parses base page of site, collects its links and pages, available by this links
      *
-     * @param site
+     * @param site initiated Site
      */
     void parseSite(Site site);
 
+    /**
+     * Collects all links from page Document
+     *
+     * @param page source Document
+     * @return all links on page
+     */
     List<String> parseLinks(Document page);
 }

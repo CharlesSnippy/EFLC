@@ -23,17 +23,27 @@
                 font-size: 0.8em;
                 width: 100%;
             }
+
+            .stripped {
+                overflow-y: scroll;
+                height: 550px;
+                font-family: 'Courier New';
+                font-size: 0.8em;
+                margin: 10px;
+                background-color: #e0e0e0;
+            }
         </style>
 
         <div class="card mb-3">
             <div class="card-header">Тестирование функций</div>
             <div class="card-body">
-                <textarea class="code-area" disabled rows="15">${url}</textarea>
-                <textarea class="code-area" disabled rows="15">${pageCode.toString().replace("&","&amp;").replace("<","&lt;").replace(">", "&gt;")}</textarea>
-                <textarea class="code-area" disabled rows="15">${pageCodeCleanup.toString().replace("&","&amp;").replace("<","&lt;").replace(">", "&gt;")}</textarea>
-                <textarea class="code-area" disabled rows="15">${title}</textarea>
-                <textarea class="code-area" disabled rows="15">${titleParsed}</textarea>
-                <div class="compare-result">
+
+                <c:forEach items="${singles}" var="item">
+                    <textarea class="code-area" disabled rows="5">${item}</textarea>
+                </c:forEach>
+
+                <c:forEach items="${differences}" var="compareResult">
+                <div class="compare-result stripped">
                     <table>
                         <c:forEach items="${compareResult}" var="item">
                             <c:choose>
@@ -54,6 +64,8 @@
                         </c:forEach>
                     </table>
                 </div>
+                </c:forEach>
+
             </div>
         </div>
     </jsp:body>

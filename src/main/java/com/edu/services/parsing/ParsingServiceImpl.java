@@ -114,6 +114,13 @@ public class ParsingServiceImpl implements ParsingService {
         supporting methods
      */
 
+    /**
+     * Filters links list by links from base url domain
+     *
+     * @param baseUrl source url
+     * @param urlList collection of links
+     * @return filtered list of links
+     */
     private List<String> getValidLinks(String baseUrl, List<String> urlList) {
         List<String> validLinks = new ArrayList<>();
         for (String url :
@@ -125,6 +132,13 @@ public class ParsingServiceImpl implements ParsingService {
         return validLinks;
     }
 
+    /**
+     * Tries to parse page and saves it on success
+     *
+     * @param urlToParse source to parse
+     * @param site       parent site
+     * @return new page, saved in DB
+     */
     private Page makeParse(String urlToParse, Site site) {
         Document parsedDocument = parsePage(urlToParse);
         Page parsingPage = new Page();
@@ -140,6 +154,12 @@ public class ParsingServiceImpl implements ParsingService {
         return parsingPage;
     }
 
+    /**
+     * Adds links from one list to another, if last does not contain it
+     *
+     * @param from source list
+     * @param to   destination list
+     */
     private void addNewLinks(List<String> from, List<String> to) {
         for (String link :
                 from) {
@@ -149,6 +169,12 @@ public class ParsingServiceImpl implements ParsingService {
         }
     }
 
+    /**
+     * Adds link to list, if last does not contain it
+     *
+     * @param link link
+     * @param to   links list
+     */
     private void addNewLink(String link, List<String> to) {
         if (!to.contains(link)) {
             to.add(link);

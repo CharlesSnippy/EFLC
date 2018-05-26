@@ -3,25 +3,44 @@ package com.edu.services.comparing;
 import com.edu.services.parsing.DiffResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class ComparingServiceImpl implements ComparingService{
+public class ComparingServiceImpl implements ComparingService {
 
     static final Logger logger = LogManager.getLogger(ComparingServiceImpl.class);
 
     @Override
     public List<DiffResult> getDifferences(List<String> a, List<String> b) {
-        logger.info("getDifferences:");
+        logger.info("getDifferences({}, {})", a, b);
         List<DiffResult> results = new ArrayList<>();
         int[][] m = prepareMatrix(a, b);
         getDiff(m, a, b, b.size(), a.size(), results);
         return results;
     }
 
+    @Override
+    public List<DiffResult> getDifferences(Document a, Document b) {
+        logger.info("getDifferences({}, {})", a, b);
+        return getDifferences(
+                Arrays.asList(a.outerHtml().split("\n")),
+                Arrays.asList(b.outerHtml().split("\n"))
+        );
+    }
+
+
+    /**
+     * Prepare matrix for diff finding
+     *
+     * @param a comparable
+     * @param b comparing
+     * @return int matrix of row indexes
+     */
     private int[][] prepareMatrix(List<String> a, List<String> b) {
         int[][] m = new int[a.size() + 1][b.size() + 1];
 
@@ -43,6 +62,16 @@ public class ComparingServiceImpl implements ComparingService{
         return m;
     }
 
+    /**
+     * Calculates diff from string arrays A and B in data format for table creation
+     *
+     * @param m      indexes matrix
+     * @param a      array A
+     * @param b      array B
+     * @param x      rows
+     * @param y      columns
+     * @param result calculated diff
+     */
     private void getDiff(int[][] m, List<String> a, List<String> b, int x, int y, List<DiffResult> result) {
         if ((x > 0) && (y > 0) && (a.get(y - 1).equals(b.get(x - 1)))) {
             getDiff(m, a, b, x - 1, y - 1, result);

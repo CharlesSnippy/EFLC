@@ -45,7 +45,7 @@ public class ComparatorController {
     public ModelAndView comparePages(@PathVariable("siteId") int siteId, @PathVariable("idA") int pageIdA, @PathVariable("idB") int pageIdB) {
         logger.info("comparePages({}, {}, {})", siteId, pageIdA, pageIdB);
 
-        ModelAndView mav = new ModelAndView("/compare");
+        ModelAndView mav = comparePageIndexBySite(siteId);
 
         Page a = pageRepository.getById(pageIdA);
         Page b = pageRepository.getById(pageIdB);
@@ -61,21 +61,9 @@ public class ComparatorController {
             listB.add(tn.text());
         }
 
-        Map<Integer, String> pageOptions = new LinkedHashMap<Integer, String>();
-
-        Site site = siteRepository.getById(siteId);
-        site.setPages(pageRepository.getPagesBySiteId(siteId));
-        for (Page page :
-                site.getPages()) {
-            pageOptions.put(page.getPageId(), page.getTitle() + " | " + page.getUrl());
-        }
-
-        mav.addObject("site", site);
         mav.addObject("firstPage", a);
         mav.addObject("secondPage", b);
         mav.addObject("compareResult", comparingService.getDifferences(listA, listB));
-        mav.addObject("pageOptions", pageOptions);
-        mav.addObject("diffResult", new DiffResult());
 
         return mav;
     }
@@ -92,7 +80,17 @@ public class ComparatorController {
         site.setPages(pageRepository.getPagesBySiteId(siteId));
         for (Page page :
                 site.getPages()) {
-            pageOptions.put(page.getPageId(), page.getTitle() + " | " + page.getUrl());
+            if(page.getUrl().equals(site.getUrl())) {
+                pageOptions.put(page.getPageId(), page.getTitle() + " | " + page.getUrl());
+                break;
+            }
+        }
+
+        for (Page page :
+                site.getPages()) {
+            if(!page.getUrl().equals(site.getUrl())) {
+                pageOptions.put(page.getPageId(), page.getTitle() + " | " + page.getUrl());
+            }
         }
 
         mav.addObject("site", site);
