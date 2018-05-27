@@ -1,5 +1,7 @@
 package com.edu.mvc.models;
 
+import java.util.Map;
+
 public class Criterion {
 
     private int criteriaId;
@@ -7,6 +9,7 @@ public class Criterion {
     private String shortDescription;
     private String longDescription;
     private String dictionary;
+    private Map<String, Object> options;
 
 
     public int getCriteriaId() {
@@ -29,6 +32,10 @@ public class Criterion {
         return dictionary;
     }
 
+    public Map<String, Object> getOptions() {
+        return options;
+    }
+
 
     public void setCriteriaId(int criteriaId) {
         this.criteriaId = criteriaId;
@@ -48,6 +55,10 @@ public class Criterion {
 
     public void setDictionary(String dictionary) {
         this.dictionary = dictionary;
+    }
+
+    public void setOptions(Map<String, Object> options) {
+        this.options = options;
     }
 
 }

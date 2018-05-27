@@ -13,7 +13,7 @@
 
     <jsp:body>
 
-        <c:url value="/compare/" var="compare"/>
+        <c:url value="/compare/" var="check"/>
 
         <style>
             .code-area {
@@ -86,7 +86,7 @@
                                  aria-labelledby="list-${settings}-list">
                                 <h1>Выберите страницы для сравнения</h1>
                                 <springform:form cssClass="form-group" method="post" modelAttribute="diffResult"
-                                                 action="${compare}${site.siteId}/getDiff">
+                                                 action="${check}${site.siteId}/getDiff">
                                     <div style="display:inline-block; width:40%;">
                                         <springform:select cssClass="form-control" id="pageUrl" path="firstIndex"><br/>
                                             <springform:options items="${pageOptions}"></springform:options>

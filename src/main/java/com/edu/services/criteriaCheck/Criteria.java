@@ -2,6 +2,8 @@ package com.edu.services.criteriaCheck;
 
 import com.edu.mvc.models.Criterion;
 
+import java.util.*;
+
 public class Criteria {
 
     //CONTENT CRITERIA
@@ -11,13 +13,13 @@ public class Criteria {
             "C1",
             "размещены сведения о дате создания ОУ",
             "сведения о дате создания образовательного учреждения",
-            "");
+            "дата;создания;основания");
     public static Criterion C2 = createCriteria(
             2,
             "C2",
             "размещены сведения о структуре ОУ",
             "сведения о структуре образовательного учреждения",
-            "");
+            "структура;образовательного;учреждения");
     public static Criterion C3 = createCriteria(
             3,
             "C3",
@@ -110,73 +112,73 @@ public class Criteria {
             "S1",
             "структура содержит специальный раздел «Сведения об образовательной организации»",
             "Для размещения информации на Сайте должен быть создан специальный раздел «Сведения об образовательной организации»",
-            "");
+            "Сведения об образовательной организации;Сведения об ОО");
     public static Criterion S2 = createCriteria(
             18,
             "S2",
             "специальный раздел содержит \"Основные сведения\"",
             "Специальный раздел должен содержать подраздел \"Основные сведения\"",
-            "");
+            "Основные сведения");
     public static Criterion S3 = createCriteria(
             19,
             "S3",
             "специальный раздел содержит \"Структура и органы управления образовательной организацией\"",
             "Специальный раздел должен содержать подраздел \"Структура и органы управления образовательной организацией\"",
-            "");
+            "Структура и органы управления образовательной организацией");
     public static Criterion S4 = createCriteria(
             20,
             "S4",
             "специальный раздел содержит \"Документы\"",
             "Специальный раздел должен содержать подраздел \"Документы\"",
-            "");
+            "Документы");
     public static Criterion S5 = createCriteria(
             21,
             "S5",
             "специальный раздел содержит \"Образование\"",
             "Специальный раздел должен содержать подраздел \"Образование\"",
-            "");
+            "Образование");
     public static Criterion S6 = createCriteria(
             22,
             "S6",
             "специальный раздел содержит \"Образовательные стандарты\"",
             "Специальный раздел должен содержать подраздел \"Образовательные стандарты\"",
-            "");
+            "Образовательные стандарты");
     public static Criterion S7 = createCriteria(
             23,
             "S7",
             "специальный раздел содержит \"Руководство. Педагогический (научно-педагогический) состав\"",
             "Специальный раздел должен содержать подраздел \"Руководство. Педагогический (научно-педагогический) состав\"",
-            "");
+            "Руководство. Педагогический (научно-педагогический) состав");
     public static Criterion S8 = createCriteria(
             24,
             "S8",
             "специальный раздел содержит \"Материально-техническое обеспечение и оснащенность образовательного процесса\"",
             "Специальный раздел должен содержать подраздел \"Материально-техническое обеспечение и оснащенность образовательного процесса\"",
-            "");
+            "Материально-техническое обеспечение и оснащенность образовательного процесса");
     public static Criterion S9 = createCriteria(
             25,
             "S9",
             "специальный раздел содержит \"Стипендии и иные виды материальной поддержки\"",
             "Специальный раздел должен содержать подраздел \"Стипендии и иные виды материальной поддержки\"",
-            "");
+            "Стипендии и иные виды материальной поддержки");
     public static Criterion S10 = createCriteria(
             26,
             "S10",
             "специальный раздел содержит \"Платные образовательные услуги\"",
             "Специальный раздел должен содержать подраздел \"Платные образовательные услуги\"",
-            "");
+            "Платные образовательные услуги");
     public static Criterion S11 = createCriteria(
             27,
             "S11",
             "специальный раздел содержит \"Финансово-хозяйственная деятельность\"",
             "Специальный раздел должен содержать подраздел \"Финансово-хозяйственная деятельность\"",
-            "");
+            "Финансово-хозяйственная деятельность");
     public static Criterion S12 = createCriteria(
             28,
             "S12",
             "специальный раздел содержит \"Вакантные места для приема (перевода)\"",
             "Специальный раздел должен содержать подраздел \"Вакантные места для приема (перевода)\"",
-            "");
+            "Вакантные места для приема (перевода)");
 
     //DOCUMENT CRITERIA
 
@@ -205,17 +207,30 @@ public class Criteria {
             "отсканированный текст в электронной копии документа должен быть читаемым",
             "");
 
-    public static Criterion[] CONTENT_CRITERIA = {C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16};
-    public static Criterion[] STRUCTURE_CRITERIA = {S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12};
-    public static Criterion[] DOCUMENT_CRITERIA = {D1, D2, D3, D4};
+    public static List<Criterion> CONTENT_CRITERIA = Arrays.asList(C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16);
+    public static List<Criterion> STRUCTURE_CRITERIA = Arrays.asList(S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12);
+    public static List<Criterion> DOCUMENT_CRITERIA = Arrays.asList(D1, D2, D3, D4);
+
+    public static List<Criterion> getCriteria() {
+        List<Criterion> criteria = new ArrayList<>();
+        criteria.addAll(CONTENT_CRITERIA);
+        criteria.addAll(STRUCTURE_CRITERIA);
+        criteria.addAll(DOCUMENT_CRITERIA);
+        return criteria;
+    }
 
     private static Criterion createCriteria(int criteriaId, String shortDescription, String name, String longDescription, String dictionary) {
+        return createCriteria(criteriaId, shortDescription, name, longDescription, dictionary, new HashMap<String, Object>());
+    }
+
+    private static Criterion createCriteria(int criteriaId, String shortDescription, String name, String longDescription, String dictionary, Map<String, Object> options) {
         Criterion criterion = new Criterion();
         criterion.setCriteriaId(criteriaId);
         criterion.setShortDescription(shortDescription);
         criterion.setName(name);
         criterion.setLongDescription(longDescription);
         criterion.setDictionary(dictionary);
+        criterion.setOptions(options);
         return criterion;
     }
 }

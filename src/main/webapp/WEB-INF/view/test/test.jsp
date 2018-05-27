@@ -43,29 +43,75 @@
                 </c:forEach>
 
                 <c:forEach items="${differences}" var="compareResult">
-                <div class="compare-result stripped">
-                    <table>
-                        <c:forEach items="${compareResult}" var="item">
-                            <c:choose>
-                                <c:when test="${item.type eq '+'.charAt(0)}">
+                    <div class="compare-result stripped">
+                        <table>
+                            <c:forEach items="${compareResult}" var="item">
+                                <c:choose>
+                                    <c:when test="${item.type eq '+'.charAt(0)}">
+                                        <tr class="table-success">
+                                    </c:when>
+                                    <c:when test="${item.type eq '-'.charAt(0)}">
+                                        <tr class="table-danger">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr>
+                                    </c:otherwise>
+                                </c:choose>
+                                <td>${item.firstIndex}</td>
+                                <td>${item.secondIndex}</td>
+                                <td>${item.row.replace("&","&amp;").replace("<","&lt;").replace(">", "&gt;")}</td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </div>
+                </c:forEach>
+                <c:forEach items="${differencesPos}" var="compareResult">
+                    <div class="compare-result stripped">
+                        <table>
+                            <c:forEach items="${compareResult}" var="item">
+                                <c:if test="${item.type eq '+'.charAt(0)}">
                                     <tr class="table-success">
-                                </c:when>
-                                <c:when test="${item.type eq '-'.charAt(0)}">
-                                    <tr class="table-danger">
-                                </c:when>
-                                <c:otherwise>
-                                    <tr>
-                                </c:otherwise>
-                            </c:choose>
-                            <td>${item.firstIndex}</td>
-                            <td>${item.secondIndex}</td>
-                            <td>${item.row.replace("&","&amp;").replace("<","&lt;").replace(">", "&gt;")}</td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-                </div>
+                                        <td>${item.firstIndex}</td>
+                                        <td>${item.secondIndex}</td>
+                                        <td>${item.row.replace("&","&amp;").replace("<","&lt;").replace(">", "&gt;")}</td>
+                                    </tr>
+                                </c:if>
+                            </c:forEach>
+                        </table>
+                    </div>
                 </c:forEach>
 
+                <c:forEach items="${differencesNeg}" var="compareResult">
+                    <div class="compare-result stripped">
+                        <table>
+                            <c:forEach items="${compareResult}" var="item">
+                                <c:if test="${item.type eq '-'.charAt(0)}">
+                                    <tr class="table-danger">
+                                        <td>${item.firstIndex}</td>
+                                        <td>${item.secondIndex}</td>
+                                        <td>${item.row.replace("&","&amp;").replace("<","&lt;").replace(">", "&gt;")}</td>
+                                    </tr>
+                                </c:if>
+                            </c:forEach>
+                        </table>
+                    </div>
+                </c:forEach>
+
+                <c:forEach items="${differencesEq}" var="compareResult">
+                    <div class="compare-result stripped">
+                        <table>
+                            <c:forEach items="${compareResult}" var="item">
+                                <c:if test="${item.type eq '='.charAt(0)}">
+                                    <tr>
+                                        <td>${item.firstIndex}</td>
+                                        <td>${item.secondIndex}</td>
+                                        <td>${item.row.replace("&","&amp;").replace("<","&lt;").replace(">", "&gt;")}</td>
+                                    </tr>
+                                </c:if>
+                            </c:forEach>
+                        </table>
+                    </div>
+                </c:forEach>
             </div>
         </div>
     </jsp:body>

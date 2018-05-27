@@ -1,6 +1,7 @@
 package com.edu.services.criteriaCheck;
 
 import com.edu.mvc.models.CheckResult;
+import com.edu.mvc.models.Criterion;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +13,9 @@ public interface CriteriaCheckService {
      * Gets result of block checking with criteria
      *
      * @param block
-     * @param dictionary
+     * @param criterion
      * @return
      */
-    CheckResult checkBlockByDictionary(List<String> block, List<String> dictionary);
+    CheckResult checkBlockByCriterion(List<String> block, Criterion criterion);
 
 }

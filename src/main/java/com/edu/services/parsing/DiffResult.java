@@ -10,7 +10,6 @@ public class DiffResult {
     private char type = ComparingService.TYPE_EQUAL;
 
 
-
     public String getFirstIndex() {
         return firstIndex;
     }
@@ -26,7 +25,6 @@ public class DiffResult {
     public char getType() {
         return type;
     }
-
 
 
     public void setFirstIndex(String firstIndex) {

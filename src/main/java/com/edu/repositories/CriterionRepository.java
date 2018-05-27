@@ -16,15 +16,16 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 
+@Deprecated
 @Repository
-public class CriteriaRepository {
+public class CriterionRepository {
 
     @Autowired
     DataSource dataSource;
 
     private JdbcTemplate jdbcTemplate;
 
-    static final Logger logger = LogManager.getLogger(CriteriaRepository.class);
+    static final Logger logger = LogManager.getLogger(CriterionRepository.class);
     private static String TABLE_NAME = "CRITERIA";
 
     @PostConstruct

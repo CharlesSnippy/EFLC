@@ -15,6 +15,7 @@
         <c:url value="/site/delete/" var="siteDelete"/>
         <c:url value="/site/parse/" var="siteParse"/>
         <c:url value="/compare/" var="comparePages"/>
+        <c:url value="/check/" var="checkSite"/>
 
         <style>
             .code-area {
@@ -70,8 +71,10 @@
                                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
                                                    role="button" aria-haspopup="true" aria-expanded="false">Выбрать</a>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="${comparePages}${item.siteId}">Сравнить страницы</a>
+
                                                     <a class="dropdown-item" href="${siteParse}${item.siteId}">Загрузить все страницы</a>
+                                                    <a class="dropdown-item" href="${checkSite}${item.siteId}">Провести анализ страниц</a>
+                                                    <a class="dropdown-item" href="${comparePages}${item.siteId}">Сравнить страницы</a>
                                                     <div class="dropdown-divider"></div>
                                                     <a class="dropdown-item"
                                                        href="${siteDelete}${item.siteId}">Удалить</a>

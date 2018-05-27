@@ -31,7 +31,7 @@
     <link href="${sb_admin}" rel="stylesheet" type="text/css">
 
     <c:url value="/" var="index"/>
-    <c:url value="/compare" var="compare"/>
+    <c:url value="/compare" var="check"/>
     <c:url value="/site/create" var="siteCreate"/>
 
 </head>

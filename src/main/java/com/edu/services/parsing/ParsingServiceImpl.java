@@ -4,6 +4,7 @@ import com.edu.mvc.models.Page;
 import com.edu.mvc.models.Site;
 import com.edu.repositories.PageRepository;
 import com.edu.repositories.SiteRepository;
+import com.edu.services.comparing.ComparingService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Connection;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ParsingServiceImpl implements ParsingService {
@@ -31,12 +34,15 @@ public class ParsingServiceImpl implements ParsingService {
     @Autowired
     PageRepository pageRepository;
 
+    @Autowired
+    ComparingService comparingService;
+
     static final Logger logger = LogManager.getLogger(ParsingServiceImpl.class);
     private static String LINK_ATTRIBUTE_KEY = "abs:href";
 
     @Override
     public String parseTitle(Document page) {
-        return page.selectFirst("title").text();
+        return page.selectFirst("title") != null ? page.selectFirst("title").text() : page.location();
     }
 
     @Override
@@ -79,11 +85,11 @@ public class ParsingServiceImpl implements ParsingService {
 
         //Parse base page
 
-        Page basePage = makeParse(site.getUrl(), site);
+        Page mainPage = makeParse(site.getUrl(), site);
 
         List<String> toParse = new ArrayList<>();
         addNewLink(site.getUrl(), toParse);
-        addNewLinks(getValidLinks(site.getUrl(), parseLinks(basePage.getDocument())), toParse);
+        addNewLinks(getValidLinks(site.getUrl(), parseLinks(mainPage.getDocument())), toParse);
         List<String> parsed = new ArrayList<>();
         parsed.add(site.getUrl());
 
@@ -92,11 +98,44 @@ public class ParsingServiceImpl implements ParsingService {
         for (String urlToParse : toParse) {
             if (!parsed.contains(urlToParse)) {
                 Page parsingPage = makeParse(urlToParse, site);
+//                if(parsingPage != null) {
+//                    List<DiffResult> differences = comparingService.getDifferences(basePage.getDocument(), parsingPage.getDocument());
+//                    parsingPage.setDocument(comparingService.getDocumentFromDiff(differences, comparingService.TYPE_ADD));
+//                    pageRepository.update(parsingPage);
+//                    /* uncomment to parse all pages*/
+////                    addNewLinks(getValidLinks(site.getUrl(), parseLinks(parsingPage.getDocument())), toParse);
+//                }
                 parsed.add(urlToParse);
-                /* uncomment to parse all pages*/
-//            addNewLinks(getValidLinks(site.getUrl(), parseLinks(parsingPage.getDocument())), toParse);
             }
         }
+        Page basePage = mainPage;
+        float maxEqualIndex = 0;
+        List<Page> pages = pageRepository.getPagesBySiteId(site.getSiteId());
+        for (Page pretender : pages) {
+            float count = 0;
+            for (Page matching : pages) {
+                List<DiffResult> diffs = comparingService.getDifferences(pretender.getDocument(), matching.getDocument());
+                for (DiffResult diff : diffs) {
+                    if(diff.getType() == comparingService.TYPE_EQUAL) {
+                        count++;
+                    }
+                }
+            }
+            count = count/pages.size();
+            if(maxEqualIndex < count) {
+                maxEqualIndex = count;
+                basePage = pretender;
+            }
+            logger.debug("pretender={}, count={}, maxEqual={}, basePage={}", pretender.getPageId(), count, maxEqualIndex, basePage.getPageId());
+        }
+        for(Page pageToCut: pages) {
+            List<DiffResult> differences = comparingService.getDifferences(basePage.getDocument(), pageToCut.getDocument());
+            pageToCut.setDocument(comparingService.getDocumentFromDiff(differences, comparingService.TYPE_ADD));
+            pageRepository.update(pageToCut);
+        }
+
+//        mainPage.setDocument(comparingService.getDocumentFromDiff(differences, comparingService.TYPE_ADD));
+//        pageRepository.update(basePage);
     }
 
     @Override
@@ -141,13 +180,17 @@ public class ParsingServiceImpl implements ParsingService {
      */
     private Page makeParse(String urlToParse, Site site) {
         Document parsedDocument = parsePage(urlToParse);
-        Page parsingPage = new Page();
+        Page parsingPage = null;
         if (parsedDocument != null) {
+            parsingPage = new Page();
             parsingPage.setTitle(parseTitle(parsedDocument));
-            Cleaner cleaner = new Cleaner(Whitelist.basic());
-            parsedDocument = cleaner.clean(parsedDocument);
             parsingPage.setSiteId(site.getSiteId());
             parsingPage.setUrl(urlToParse);
+            Elements restricted = parsedDocument.select("script, meta, link");
+            for (Element removingElement:
+                 restricted) {
+                removingElement.remove();
+            }
             parsingPage.setDocument(parsedDocument);
             pageRepository.create(parsingPage);
         }

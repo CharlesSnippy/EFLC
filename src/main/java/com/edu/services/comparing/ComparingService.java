@@ -31,4 +31,13 @@ public interface ComparingService {
      */
     List<DiffResult> getDifferences(Document a, Document b);
 
+    /**
+     * Get document parsed from difference rows
+     *
+     * @param diff differences
+     * @param type type of difference
+     * @return parsed document
+     */
+    Document getDocumentFromDiff(List<DiffResult> diff, char type);
+
 }

@@ -15,12 +15,15 @@
         <Logger name= "com.edu.repositories.PageRepository" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name= "com.edu.repositories.CriteriaRepository" level="info" additivity="false">
+        <Logger name= "com.edu.repositories.CriterionRepository" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
 
         <!--Service Loggers-->
-        <Logger name= "com.edu.services.parsing.ParsingServiceImpl" level="info" additivity="false">
+        <Logger name= "com.edu.services.parsing.ParsingServiceImpl" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name= "com.edu.services.comparing.ComparingServiceImpl" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
 
@@ -32,7 +35,7 @@
         <Logger name= "com.edu.mvc.controllers.ComparatorController" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name= "com.edu.mvc.controllers.CriteriaCheckController" level="info" additivity="false">
+        <Logger name= "com.edu.mvc.controllers.CriteriaCheckController" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         <Logger name= "com.edu.mvc.controllers.SiteController" level="info" additivity="false">

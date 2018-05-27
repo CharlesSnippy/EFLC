@@ -3,7 +3,10 @@ package com.edu.services.comparing;
 import com.edu.services.parsing.DiffResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ public class ComparingServiceImpl implements ComparingService {
 
     @Override
     public List<DiffResult> getDifferences(List<String> a, List<String> b) {
-        logger.info("getDifferences({}, {})", a, b);
+        logger.debug("getDifferences({}, {})", a.size(), b.size());
         List<DiffResult> results = new ArrayList<>();
         int[][] m = prepareMatrix(a, b);
         getDiff(m, a, b, b.size(), a.size(), results);
@@ -26,11 +29,23 @@ public class ComparingServiceImpl implements ComparingService {
 
     @Override
     public List<DiffResult> getDifferences(Document a, Document b) {
-        logger.info("getDifferences({}, {})", a, b);
+        logger.debug("getDifferences(a, b)");
         return getDifferences(
                 Arrays.asList(a.outerHtml().split("\n")),
                 Arrays.asList(b.outerHtml().split("\n"))
         );
+    }
+
+    @Override
+    public Document getDocumentFromDiff(List<DiffResult> diff, char type) {
+        List<String> rowsToParse = new ArrayList<>();
+        for (DiffResult diffResult :
+                diff) {
+            if (diffResult.getType() == type) {
+                rowsToParse.add(diffResult.getRow());
+            }
+        }
+        return Jsoup.parse(String.join("\n", rowsToParse));
     }
 
 
