@@ -21,6 +21,19 @@
     <spring:url value="/resources/vendor/font-awesome/css/font-awesome.min.css" var="font_awesome"/>
     <spring:url value="/resources/css/sb-admin.css" var="sb_admin"/>
 
+    <spring:url value="/resources/vendor/jquery/jquery.min.js" var="jquery_js"/>
+    <spring:url value="/resources/vendor/bootstrap/js/bootstrap.bundle.min.js" var="bootstrap_js"/>
+    <spring:url value="/resources/vendor/jquery-easing/jquery.easing.min.js" var="jquery_easing_js"/>
+    <spring:url value="/resources/js/sb-admin.min.js" var="sbadmin_js"/>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="${jquery_js}"></script>
+    <script src="${bootstrap_js}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="${jquery_easing_js}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="${sbadmin_js}"></script>
+
     <!-- Bootstrap core CSS-->
     <link href="${bootstrap}" rel="stylesheet" type="text/css">
 
@@ -31,6 +44,7 @@
     <link href="${sb_admin}" rel="stylesheet" type="text/css">
 
     <c:url value="/" var="index"/>
+    <c:url value="/criteria" var="criteriaIndex"/>
     <c:url value="/compare" var="check"/>
     <c:url value="/site/create" var="siteCreate"/>
 
@@ -47,9 +61,14 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav navbar-sidenav">
-            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+            <li class="nav-item" data-toggle="tooltip" data-placement="right">
                 <a class="nav-link" href="${siteCreate}">
-                    <span class="nav-link-text">Add site</span>
+                    <span class="nav-link-text">Добавить сайт</span>
+                </a>
+            </li>
+            <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                <a class="nav-link" href="${criteriaIndex}">
+                    <span class="nav-link-text">Просмотреть критерии</span>
                 </a>
             </li>
             <%--<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">--%>
@@ -107,18 +126,6 @@
         </div>
     </div>
 
-    <spring:url value="/resources/vendor/jquery/jquery.min.js" var="jquery_js"/>
-    <spring:url value="/resources/vendor/bootstrap/js/bootstrap.bundle.min.js" var="bootstrap_js"/>
-    <spring:url value="/resources/vendor/jquery-easing/jquery.easing.min.js" var="jquery_easing_js"/>
-    <spring:url value="/resources/js/sb-admin.min.js" var="sbadmin_js"/>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="${jquery_js}"></script>
-    <script src="${bootstrap_js}"></script>
-    <!-- Core plugin JavaScript-->
-    <script src="${jquery_easing_js}"></script>
-    <!-- Custom scripts for all pages-->
-    <script src="${sbadmin_js}"></script>
 
     <%--<security:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_USER', 'ROLE_USER')" var="isUSer"/>--%>
 

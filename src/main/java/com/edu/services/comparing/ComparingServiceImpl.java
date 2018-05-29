@@ -88,6 +88,7 @@ public class ComparingServiceImpl implements ComparingService {
      * @param result calculated diff
      */
     private void getDiff(int[][] m, List<String> a, List<String> b, int x, int y, List<DiffResult> result) {
+        logger.trace("getDiff(mSize={}x{}, aSize={}, bSize={}, x={}, y={}", m.length, m[0].length, a.size(), b.size(), x, y);
         if ((x > 0) && (y > 0) && (a.get(y - 1).equals(b.get(x - 1)))) {
             getDiff(m, a, b, x - 1, y - 1, result);
             DiffResult diffResult = new DiffResult();

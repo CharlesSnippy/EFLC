@@ -74,7 +74,38 @@ public class SiteController {
         parsingService.parseSite(site);
         site.setState(Site.STATE_PARSED);
         siteRepository.update(site);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/site/" + siteId);
+    }
+
+    @RequestMapping(value = "/site/{siteId}", method = RequestMethod.GET)
+    public ModelAndView siteView(@PathVariable("siteId") int siteId) {
+        logger.info("siteView({})", siteId);
+        ModelAndView mav = new ModelAndView("site/view");
+        Site site = siteRepository.getById(siteId);
+        site.setPages(pageRepository.getPagesBySiteId(siteId));
+        mav.addObject("site", site);
+        return mav;
+    }
+
+    @RequestMapping(value = "/site/cut/{siteId}", method = RequestMethod.GET)
+    public ModelAndView siteCut(@PathVariable("siteId") int siteId) {
+        logger.info("siteCut({})", siteId);
+        ModelAndView mav = new ModelAndView("/site/cut");
+        Site site = siteRepository.getById(siteId);
+        site.setPages(pageRepository.getPagesBySiteId(siteId));
+        mav.addObject("site", site);
+        return mav;
+    }
+
+    @RequestMapping(value = "/site/cut/{siteId}/{pageId}", method = RequestMethod.GET)
+    public ModelAndView siteCutByPageId(@PathVariable("siteId") int siteId, @PathVariable("pageId") int pageId) {
+        logger.info("siteCutByPageId({})", siteId);
+        ModelAndView mav = new ModelAndView("redirect:/site/" + siteId);
+        Site site = siteRepository.getById(siteId);
+        site.setPages(pageRepository.getPagesBySiteId(siteId));
+        Page source = pageRepository.getById(pageId);
+        parsingService.cutPages(site, source);
+        return mav;
     }
 
 }

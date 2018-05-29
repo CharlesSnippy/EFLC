@@ -24,9 +24,37 @@
         </style>
 
         <div class="card mb-3">
-            <div class="card-header">Результат анализа</div>
+            <div class="card-header">Результат структурного анализа</div>
             <div class="card-body">
-
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Страница</th>
+                        <th scope="col">Адрес</th>
+                        <th scope="col">Результаты</th>
+                    </tr>
+                    </thead>
+                    <c:forEach items="${pageRating}" var="item">
+                        <c:if test="${item.value > 0}">
+                        <tr>
+                            <td>
+                                    ${item.key.title}
+                            </td>
+                            <td>
+                                <a href="${item.key.url}" class="d-inline-block text-truncate" style="max-width: 400px;">${item.key.url}</a>
+                            </td>
+                            <td>
+                                <c:forEach items="${results}" var="result">
+                                    <c:if test="${result.page.pageId == item.key.pageId}">
+                                        <p>${result.criterion.name} : ${result.answer}</p>
+                                        <%--<p>${result.block}</p>--%>
+                                    </c:if>
+                                </c:forEach>
+                            </td>
+                        </tr>
+                        </c:if>
+                    </c:forEach>
+                </table>
             </div>
         </div>
     </jsp:body>

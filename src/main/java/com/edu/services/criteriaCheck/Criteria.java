@@ -219,11 +219,11 @@ public class Criteria {
         return criteria;
     }
 
-    private static Criterion createCriteria(int criteriaId, String shortDescription, String name, String longDescription, String dictionary) {
-        return createCriteria(criteriaId, shortDescription, name, longDescription, dictionary, new HashMap<String, Object>());
+    private static Criterion createCriteria(int criteriaId, String name, String shortDescription, String longDescription, String dictionary) {
+        return createCriteria(criteriaId, name, shortDescription, longDescription, dictionary, new HashMap<String, Object>());
     }
 
-    private static Criterion createCriteria(int criteriaId, String shortDescription, String name, String longDescription, String dictionary, Map<String, Object> options) {
+    private static Criterion createCriteria(int criteriaId, String name, String shortDescription, String longDescription, String dictionary, Map<String, Object> options) {
         Criterion criterion = new Criterion();
         criterion.setCriteriaId(criteriaId);
         criterion.setShortDescription(shortDescription);

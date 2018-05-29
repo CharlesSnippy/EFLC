@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 
-@Deprecated
 @Repository
 public class CriterionRepository {
 
@@ -44,7 +43,7 @@ public class CriterionRepository {
             criterion.setShortDescription(resultSet.getString("SHORTDESC"));
             criterion.setLongDescription(resultSet.getString("LONGDESC"));
             criterion.setLongDescription(resultSet.getString("LONGDESC"));
-            criterion.setDictionary(resultSet.getString("DICTIONARY"));
+            criterion.setDictionary(resultSet.getString("DICT"));
             return criterion;
         }
     };

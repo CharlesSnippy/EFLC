@@ -35,7 +35,7 @@ public class ComparatorController {
     @RequestMapping(value = "/compare")
     public ModelAndView compareIndex() {
         logger.info("compareIndex()");
-        return new ModelAndView("/compare");
+        return new ModelAndView("tool/compare");
     }
 
     @RequestMapping(value = "/compare/{siteId}/{idA}/{idB}")
@@ -58,7 +58,7 @@ public class ComparatorController {
     public ModelAndView comparePageIndexBySite(@PathVariable("siteId") int siteId) {
         logger.info("comparePageIndexBySite({})", siteId);
 
-        ModelAndView mav = new ModelAndView("/compare");
+        ModelAndView mav = new ModelAndView("tool/compare");
 
         Map<Integer, String> pageOptions = new LinkedHashMap<Integer, String>();
 

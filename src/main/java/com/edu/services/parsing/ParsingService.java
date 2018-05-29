@@ -1,5 +1,6 @@
 package com.edu.services.parsing;
 
+import com.edu.mvc.models.Page;
 import com.edu.mvc.models.Site;
 import com.edu.repositories.PageRepository;
 import com.edu.repositories.SiteRepository;
@@ -43,4 +44,12 @@ public interface ParsingService {
      * @return all links on page
      */
     List<String> parseLinks(Document page);
+
+    /**
+     * Adds cutDocuments to site pages, cutting by content of Source page
+     *
+     * @param site   site to modify
+     * @param source source page of cutting
+     */
+    void cutPages(Site site, Page source);
 }

@@ -37,20 +37,25 @@ public class PageRepository {
     RowMapper<Page> pageRowMapper = new RowMapper<Page>() {
         @Override
         public Page mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-            logger.info("pageRowMapper");
+            logger.debug("pageRowMapper");
             Page page = new Page();
             page.setPageId(resultSet.getInt("ID"));
             page.setSiteId(resultSet.getInt("SITEID"));
             page.setUrl(resultSet.getString("URL"));
             page.setTitle(resultSet.getString("TITLE"));
-            page.setDocument(Jsoup.parse(resultSet.getString("PAGEDOC")));
+            if (resultSet.getString("PAGEDOC") != null) {
+                page.setDocument(Jsoup.parse(resultSet.getString("PAGEDOC")));
+            }
+            if (resultSet.getString("CUTDOC") != null) {
+                page.setCutDocument(Jsoup.parse(resultSet.getString("CUTDOC")));
+            }
             return page;
         }
     };
 
     public void create(Page page) {
         logger.info("create({})", page.getUrl());
-        String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (SITEID, URL, TITLE, PAGEDOC) VALUES (?, ?, ?, ?)";
+        String SQL_CREATE = "INSERT INTO " + TABLE_NAME + " (SITEID, URL, TITLE, PAGEDOC, CUTDOC) VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
@@ -60,6 +65,7 @@ public class PageRepository {
                 preparedStatement.setString(2, page.getUrl());
                 preparedStatement.setString(3, page.getTitle());
                 preparedStatement.setString(4, (page.getDocument() == null) ? "" : page.getDocument().toString());
+                preparedStatement.setString(5, (page.getCutDocument() == null) ? "" : page.getCutDocument().toString());
                 return preparedStatement;
             }
         }, keyHolder);
@@ -82,12 +88,13 @@ public class PageRepository {
 
     public void update(Page page) {
         logger.info("update({})", page.getUrl());
-        String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET SITEID = ?, URL = ?, TITLE = ?, PAGEDOC = ? WHERE ID = ?";
+        String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET SITEID = ?, URL = ?, TITLE = ?, PAGEDOC = ?, CUTDOC = ? WHERE ID = ?";
         jdbcTemplate.update(SQL_UPDATE,
                 page.getSiteId(),
                 page.getUrl(),
                 page.getTitle(),
                 (page.getDocument() == null) ? "" : page.getDocument().toString(),
+                (page.getCutDocument() == null) ? "" : page.getCutDocument().toString(),
 
                 page.getPageId());
     }

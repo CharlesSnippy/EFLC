@@ -1,12 +1,17 @@
 package com.edu.mvc.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Site {
 
     public static int STATE_CREATED = 0;
     public static int STATE_PARSED = 1;
+    public static int STATE_CUT_DONE = 2;
+
+    public static List<String> STATE_STRING = Arrays.asList("Добавлен", "Загружен", "Страницы обработаны");
+    public static List<String> STATE_CLASS = Arrays.asList("badge-info", "badge-warning", "badge-success");
 
     private int siteId;
     private String url;

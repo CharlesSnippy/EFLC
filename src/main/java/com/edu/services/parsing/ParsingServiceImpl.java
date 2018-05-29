@@ -108,31 +108,31 @@ public class ParsingServiceImpl implements ParsingService {
                 parsed.add(urlToParse);
             }
         }
-        Page basePage = mainPage;
-        float maxEqualIndex = 0;
-        List<Page> pages = pageRepository.getPagesBySiteId(site.getSiteId());
-        for (Page pretender : pages) {
-            float count = 0;
-            for (Page matching : pages) {
-                List<DiffResult> diffs = comparingService.getDifferences(pretender.getDocument(), matching.getDocument());
-                for (DiffResult diff : diffs) {
-                    if(diff.getType() == comparingService.TYPE_EQUAL) {
-                        count++;
-                    }
-                }
-            }
-            count = count/pages.size();
-            if(maxEqualIndex < count) {
-                maxEqualIndex = count;
-                basePage = pretender;
-            }
-            logger.debug("pretender={}, count={}, maxEqual={}, basePage={}", pretender.getPageId(), count, maxEqualIndex, basePage.getPageId());
-        }
-        for(Page pageToCut: pages) {
-            List<DiffResult> differences = comparingService.getDifferences(basePage.getDocument(), pageToCut.getDocument());
-            pageToCut.setDocument(comparingService.getDocumentFromDiff(differences, comparingService.TYPE_ADD));
-            pageRepository.update(pageToCut);
-        }
+//        Page basePage = mainPage;
+//        float maxEqualIndex = 0;
+//        List<Page> pages = pageRepository.getPagesBySiteId(site.getSiteId());
+//        for (Page pretender : pages) {
+//            float count = 0;
+//            for (Page matching : pages) {
+//                List<DiffResult> diffs = comparingService.getDifferences(pretender.getDocument(), matching.getDocument());
+//                for (DiffResult diff : diffs) {
+//                    if(diff.getType() == comparingService.TYPE_EQUAL) {
+//                        count++;
+//                    }
+//                }
+//            }
+//            count = count/pages.size();
+//            if(maxEqualIndex < count) {
+//                maxEqualIndex = count;
+//                basePage = pretender;
+//            }
+//            logger.debug("pretender={}, count={}, maxEqual={}, basePage={}", pretender.getPageId(), count, maxEqualIndex, basePage.getPageId());
+//        }
+//        for(Page pageToCut: pages) {
+//            List<DiffResult> differences = comparingService.getDifferences(basePage.getDocument(), pageToCut.getDocument());
+//            pageToCut.setDocument(comparingService.getDocumentFromDiff(differences, comparingService.TYPE_ADD));
+//            pageRepository.update(pageToCut);
+//        }
 
 //        mainPage.setDocument(comparingService.getDocumentFromDiff(differences, comparingService.TYPE_ADD));
 //        pageRepository.update(basePage);
@@ -147,6 +147,26 @@ public class ParsingServiceImpl implements ParsingService {
             links.add(link.attr(LINK_ATTRIBUTE_KEY));
         }
         return links;
+    }
+
+    @Override
+    public void cutPages(Site site, Page source) {
+        List<Page> sitePages = site.getPages();
+        for (Page page :
+                sitePages) {
+            logger.info("cutPages() {} {}",source.getUrl(), page.getUrl());
+            page.setCutDocument(
+                    comparingService.getDocumentFromDiff(
+                            comparingService.getDifferences(
+                                    source.getDocument(),
+                                    page.getDocument()
+                            ), comparingService.TYPE_ADD
+                    )
+            );
+            pageRepository.update(page);
+        }
+        site.setState(Site.STATE_CUT_DONE);
+        siteRepository.update(site);
     }
 
     /*
@@ -186,9 +206,9 @@ public class ParsingServiceImpl implements ParsingService {
             parsingPage.setTitle(parseTitle(parsedDocument));
             parsingPage.setSiteId(site.getSiteId());
             parsingPage.setUrl(urlToParse);
-            Elements restricted = parsedDocument.select("script, meta, link");
-            for (Element removingElement:
-                 restricted) {
+            Elements restricted = parsedDocument.select("script, meta, link, style");
+            for (Element removingElement :
+                    restricted) {
                 removingElement.remove();
             }
             parsingPage.setDocument(parsedDocument);

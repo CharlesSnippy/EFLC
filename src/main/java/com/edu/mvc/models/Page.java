@@ -9,6 +9,7 @@ public class Page {
     private String url;
     private String title;
     private Document document;
+    private Document cutDocument;
 
 
     public int getPageId() {
@@ -31,6 +32,10 @@ public class Page {
         return document;
     }
 
+    public Document getCutDocument() {
+        return cutDocument;
+    }
+
 
     public void setPageId(int pageId) {
         this.pageId = pageId;
@@ -50,6 +55,10 @@ public class Page {
 
     public void setDocument(Document document) {
         this.document = document;
+    }
+
+    public void setCutDocument(Document cutDocument) {
+        this.cutDocument = cutDocument;
     }
 
 }

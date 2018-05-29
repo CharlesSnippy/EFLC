@@ -9,6 +9,8 @@ import java.util.List;
 @Service
 public interface CriteriaCheckService {
 
+    void initCriteria();
+
     /**
      * Gets result of block checking with criteria
      *
