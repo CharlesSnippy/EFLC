@@ -87,7 +87,8 @@ public class CriterionRepository {
                 criterion.getName(),
                 criterion.getShortDescription(),
                 criterion.getLongDescription(),
-                criterion.getDictionary());
+                criterion.getDictionary(),
+                criterion.getCriteriaId());
     }
 
     public void delete(int criteriaId) {

@@ -29,6 +29,7 @@
                 <table class="table">
                     <thead>
                     <tr>
+                        <th scope="col">ID</th>
                         <th scope="col">Страница</th>
                         <th scope="col">Адрес</th>
                         <th scope="col">Результаты</th>
@@ -37,6 +38,9 @@
                     <c:forEach items="${pageRating}" var="item">
                         <c:if test="${item.value > 0}">
                         <tr>
+                            <td>
+                                ${item.key.pageId}
+                            </td>
                             <td>
                                     ${item.key.title}
                             </td>

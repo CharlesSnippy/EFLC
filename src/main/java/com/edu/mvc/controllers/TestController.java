@@ -1,19 +1,19 @@
 package com.edu.mvc.controllers;
 
-import com.edu.mvc.models.Page;
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
+import com.edu.mvc.models.Criterion;
 import com.edu.repositories.PageRepository;
 import com.edu.repositories.SiteRepository;
 import com.edu.services.comparing.ComparingService;
 import com.edu.services.criteriaCheck.Criteria;
 import com.edu.services.criteriaCheck.CriteriaCheckService;
-import com.edu.services.parsing.DiffResult;
 import com.edu.services.parsing.ParsingService;
+import com.edu.services.semantic.LSAResult;
+import com.edu.services.semantic.SemanticService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.*;
-import org.jsoup.safety.Cleaner;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +40,9 @@ public class TestController {
     @Autowired
     CriteriaCheckService criteriaCheckService;
 
+    @Autowired
+    SemanticService semanticService;
+
     static final Logger logger = LogManager.getLogger(TestController.class);
 
     @RequestMapping(value = "/test")
@@ -57,28 +60,49 @@ public class TestController {
         // TESTS
 
         String url = "http://sch10spb.ru/sveden/common/";
-        String urlBase = "http://sch10spb.ru/";
+        String urlBase = "http://sch10spb.ru/school_life/";
         singles.add(url);
 
         Document doc = parsingService.parsePage(url);
         Document docBase = parsingService.parsePage(urlBase);
         singles.add(doc);
         singles.add(docBase);
+        Document diff = comparingService.getDocumentFromDiff(comparingService.getDifferences(docBase, doc), comparingService.TYPE_ADD);
+        Document diff2 = comparingService.getDocumentFromDiff(comparingService.getDifferences(docBase, doc), comparingService.TYPE_DELETE);
+        singles.add(diff);
+        singles.add(diff2);
+        List<String> stopWords = semanticService.getStopWords();
+        singles.add(stopWords);
+        String text = diff.text();
+        String text2 = diff2.text();
+        List<String> documents = new ArrayList<>();
+        documents.add(text.replaceAll("[^а-яА-Я ]", ""));
+//        documents.add(text2.replaceAll("[^а-яА-Я ]", ""));
+        singles.add(text);
+        singles.add(text2);
+        for (Criterion criterion :
+                Criteria.CONTENT_CRITERIA) {
+            String critText = criterion.getLongDescription().replaceAll("[^а-яА-Я ]", "");
+            documents.add(critText);
+            singles.add(critText);
+        }
 
-        Document parsed = comparingService.getDocumentFromDiff(comparingService.getDifferences(doc, docBase), comparingService.TYPE_EQUAL);
-        singles.add(parsed);
-        Document parsedAdd = comparingService.getDocumentFromDiff(comparingService.getDifferences(doc, docBase), comparingService.TYPE_ADD);
-        singles.add(parsedAdd);
-        Document parsedNeg = comparingService.getDocumentFromDiff(comparingService.getDifferences(doc, docBase), comparingService.TYPE_DELETE);
-        singles.add(parsedNeg);
 
-        differences.add(comparingService.getDifferences(doc, doc));
-        differences.add(comparingService.getDifferences(docBase, docBase));
-        differences.add(comparingService.getDifferences(doc, docBase));
-        differencesEq.add(comparingService.getDifferences(doc, docBase));
-        differencesPos.add(comparingService.getDifferences(doc, docBase));
-        differencesNeg.add(comparingService.getDifferences(doc, docBase));
-//        criteriaCheckService.checkBlockByCriterion(new ArrayList<>(), Criteria.C1);
+        LSAResult lsaResult = semanticService.analyze(documents);
+
+        Matrix A = new Matrix(lsaResult.getFrequencyMatrix());
+        singles.add(matrixToString(A));
+        SingularValueDecomposition svd = A.svd();
+        Matrix u = svd.getU();
+        singles.add(matrixToString(u));
+        Matrix s = svd.getS();
+        singles.add(matrixToString(s));
+        Matrix v = svd.getV();
+        singles.add(matrixToString(v));
+        double[] sV = svd.getSingularValues();
+
+        double[][] coordinates = u.getArray();
+        mav.addObject("coordinates", coordinates);
 
 
 
@@ -91,6 +115,23 @@ public class TestController {
         mav.addObject("singles", singles);
 
         return mav;
+    }
+
+    private String matrixToString(Matrix matrix) {
+        String result;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (double[] row :
+                matrix.getArray()) {
+            stringBuilder.append("[\t");
+            for (double cell :
+                    row) {
+                stringBuilder.append(cell);
+                stringBuilder.append("\t");
+            }
+            stringBuilder.append("\t]\n");
+        }
+        result = stringBuilder.toString();
+        return result;
     }
 
 }
